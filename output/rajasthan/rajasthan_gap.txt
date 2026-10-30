@@ -1,0 +1,30 @@
+Rajasthan districts: 33
+Mean change in clean-fuel use: Rajasthan +9.5 pp, rest of India +16.4 pp
+Conditional gap (Rajasthan vs comparable districts): -8.19 pp (cluster SE 1.46, p = 0.000)
+Permutation: Rajasthan ranks 2 of 24 states (1 = largest shortfall); two-sided permutation p = 0.25
+
+State gaps (pp, same specification):
+Uttarakhand          -9.39
+Rajasthan            -8.19
+Haryana              -5.65
+Madhya Pradesh       -5.02
+Arunachal Pradesh    -4.74
+Jharkhand            -4.72
+Chhattisgarh         -4.67
+Tamil Nadu           -4.04
+Himachal Pradesh     -3.40
+Punjab               -2.63
+Nagaland             -2.19
+Kerala               -2.03
+West Bengal          -1.39
+Uttar Pradesh        -1.31
+Jammu & Kashmir      -0.09
+Odisha               -0.04
+Assam                 1.14
+Gujarat               2.34
+Bihar                 3.76
+Andhra Pradesh        7.11
+Mizoram               9.37
+Maharashtra           9.96
+Manipur              11.86
+Karnataka            14.16

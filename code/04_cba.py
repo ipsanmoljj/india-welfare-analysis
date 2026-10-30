@@ -10,6 +10,7 @@ Links the DiD to welfare in two ways:
 Every parameter has a source and a confidence tag. VERIFY items marked
 [Likely]/[Guessing] against the cited source before submission.
 """
+import sys
 from pathlib import Path
 
 import matplotlib
@@ -19,8 +20,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# Usage: python code/04_cba.py [Rajasthan]   (omit for all-India)
+STATE = sys.argv[1] if len(sys.argv) > 1 else None
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output"
+OUT = ROOT / "output" / (STATE.lower() if STATE else "all_india")
+OUT.mkdir(parents=True, exist_ok=True)
 
 P = {
     # Costs
@@ -28,6 +32,7 @@ P = {
     "stove_cost": 1000,          # Rs, one-time stove; beneficiary-financed in Phase I [Guessing]
     "lpg_resource_cost": 850,    # Rs per 14.2kg cylinder, unsubsidised retail price (Delhi, 2025) [Likely]
     "refill_subsidy": 300,       # Rs per cylinder targeted PMUY subsidy from Oct 2023 [Likely]
+    "state_topup": 0,            # Rs per cylinder paid by the state on top (Rajasthan: see below)
     "refills_per_year": 3.95,    # PMUY per-capita refills FY2023-24, Rajya Sabha reply Feb 2025 [Certain]
     "full_use_refills": 7.0,     # cylinders/yr for a household cooking only on LPG [Guessing]
     # Benefits
@@ -40,7 +45,15 @@ P = {
 }
 # Programme scale for the conversion-rate calculation
 CONNECTIONS_BY_NFHS5 = 8.0e7     # 8 crore connections by Sept 2019 (MoPNG) [Certain]
-HOUSEHOLDS_INDIA = 2.9e8         # ~29 crore households c. 2020 [Likely]
+HOUSEHOLDS = 2.9e8               # ~29 crore households c. 2020 [Likely]
+GAP = 0.0                        # state shortfall vs comparable districts (05_rajasthan_gap.py)
+if STATE == "Rajasthan":
+    CONNECTIONS_BY_NFHS5 = 63.59e5  # PMUY beneficiaries 31.03.2021, Lok Sabha AU1844 [Certain]
+    HOUSEHOLDS = 1.45e7             # ~1.45 crore households c. 2020 (Census 2011: ~1.26 cr) [Guessing]
+    GAP = -8.19                     # pp, from 05_rajasthan_gap.py
+    # From 1 Jan 2024 Rajasthan sells PMUY refills at Rs 450; state pays the rest
+    # after the central Rs 300 [Likely: CM announcement, Dec 2023]
+    P["state_topup"] = P["lpg_resource_cost"] - P["refill_subsidy"] - 450
 
 
 def pv(flow, r, T):
@@ -52,10 +65,11 @@ def cba(p, health=0.0):
     hourly = p["rural_wage_day"] / 8 * p["time_value_share"]
     time_benefit = p["collection_hours"] * share * hourly
     lpg_cost = p["refills_per_year"] * p["lpg_resource_cost"]
-    oop = p["refills_per_year"] * (p["lpg_resource_cost"] - p["refill_subsidy"])
+    per_refill_subsidy = p["refill_subsidy"] + p["state_topup"]
+    oop = p["refills_per_year"] * (p["lpg_resource_cost"] - per_refill_subsidy)
     r, T = p["discount"], p["horizon"]
     social_npv = pv(time_benefit + health - lpg_cost, r, T) - p["connection_cost"] - p["stove_cost"]
-    gov_cost = p["connection_cost"] + pv(p["refills_per_year"] * p["refill_subsidy"], r, T)
+    gov_cost = p["connection_cost"] + pv(p["refills_per_year"] * per_refill_subsidy, r, T)
     # Beneficiary WTP for the programme = what they gain net of what they pay
     private_gain = pv(time_benefit + health - oop, r, T) - p["stove_cost"]
     return dict(
@@ -67,14 +81,20 @@ def cba(p, health=0.0):
 
 
 # A. Conversion rate from the first stage
-res = pd.read_csv(OUT / "pmuy_results.csv")
+# Slope always from the all-India DiD: within one state it is not identified
+res = pd.read_csv(ROOT / "output" / "all_india" / "pmuy_results.csv")
 b = res.query("model == 'first_stage' and spec == 'state FE + baseline controls'")["coef"].iloc[0]
 panel = pd.read_csv(ROOT / "data" / "clean" / "district_panel.csv")
+if STATE:
+    panel = panel[panel["State"] == STATE]
 mean_exposure = (100 - panel["clean_fuel_nfhs4"]).mean()
 # Strong assumption: a district with zero exposure gets zero PMUY effect
 effect_pp = b * mean_exposure
-switchers = effect_pp / 100 * HOUSEHOLDS_INDIA
+switchers = effect_pp / 100 * HOUSEHOLDS
 conversion = switchers / CONNECTIONS_BY_NFHS5
+# Lower bound: attribute the state's whole shortfall to weaker PMUY take-up
+effect_lo = max(effect_pp + GAP, 0.0)
+conversion_lo = effect_lo / 100 * HOUSEHOLDS / CONNECTIONS_BY_NFHS5
 
 # B. CBA
 base = cba(P)
@@ -86,6 +106,10 @@ lines = [
     f"  implied switchers                    = {switchers / 1e7:.2f} crore households",
     f"  conversion rate (switchers/connections) = {conversion:.0%}",
     f"  connection cost per effective switcher  = Rs {P['connection_cost'] / conversion:,.0f}",
+] + ([
+    f"  LOWER BOUND (subtract state gap {GAP:+.2f} pp): effect {effect_lo:.1f} pp, "
+    f"conversion {conversion_lo:.0%}, cost per switcher Rs {P['connection_cost'] / max(conversion_lo, 1e-9):,.0f}",
+] if GAP else []) + [
     "",
     "B. PER-HOUSEHOLD CBA, base case (health benefit = 0, as the DiD finds)",
 ] + [f"  {k:22s} = {v:,.2f}" for k, v in base.items()]
@@ -117,7 +141,7 @@ ax.axvline(P["refills_per_year"], color="grey", ls="--", lw=0.8)
 ax.text(P["refills_per_year"] + 0.05, ax.get_ylim()[1] * 0.9, "actual FY24\n(3.95)", fontsize=8)
 ax.set_xlabel("Refills per household per year")
 ax.set_ylabel("Social NPV per household (Rs, 10 yrs, 8%)")
-ax.set_title("PMUY social NPV: refills and value of time")
+ax.set_title(f"PMUY social NPV, {STATE or 'India'}: refills and value of time")
 ax.legend(frameon=False, fontsize=8)
 fig.tight_layout()
 fig.savefig(OUT / "fig_cba_sensitivity.png", dpi=200)

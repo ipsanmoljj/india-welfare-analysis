@@ -1,0 +1,17 @@
+model,spec,term,coef,se,p,n
+first_stage,no FE (single state),exposure,0.048734770488134925,0.05920881067528276,0.41045114397683713,33
+first_stage,no FE (single state) + baseline controls,exposure,0.059117327292352556,0.12645487490039065,0.6401440401932772,33
+first_stage_quadratic,no FE (single state) + baseline controls,exposure,-0.3884202774319775,1.3114586440906462,0.7670970143287892,33
+first_stage_quadratic,no FE (single state) + baseline controls,exposure_sq,0.34967406306375515,0.9556501941740928,0.7144384024762456,33
+reduced_form_child_ari,controls + baseline outcome,exposure,0.01599633772024702,0.07225492851103762,0.8247907273892843,33
+2sls_child_ari,controls + baseline outcome,d_clean_fuel,0.2924445795276256,0.9119678932426613,0.7484572968559904,33
+reduced_form_child_stunted,controls + baseline outcome,exposure,0.07700843290800238,0.12512034834785501,0.5382411456479006,33
+2sls_child_stunted,controls + baseline outcome,d_clean_fuel,1.2173183896426139,1.9343345122745241,0.5291385671106867,33
+reduced_form_child_underweight,controls + baseline outcome,exposure,0.04711118721598721,0.11915033586500862,0.6925530076366574,33
+2sls_child_underweight,controls + baseline outcome,d_clean_fuel,-9.703380025079241,200.1056944482804,0.9613247187346162,33
+reduced_form_child_anaemic,controls + baseline outcome,exposure,0.18277110580258646,0.19707549226309015,0.3537102150013077,33
+2sls_child_anaemic,controls + baseline outcome,d_clean_fuel,-7.627791311798319,30.073743770560444,0.7997765959573487,33
+reduced_form_women_anaemic_np,controls + baseline outcome,exposure,0.16705463522933986,0.2292059878412084,0.4660991585160087,33
+2sls_women_anaemic_np,controls + baseline outcome,d_clean_fuel,10.675611442708032,68.19381844123168,0.875601022889196,33
+reduced_form_inst_births,controls + baseline outcome,exposure,-0.07404065870524831,0.06545407393784392,0.257977284932119,33
+2sls_inst_births,controls + baseline outcome,d_clean_fuel,-1.247059462381685,2.258161395157611,0.5807801666258419,33
