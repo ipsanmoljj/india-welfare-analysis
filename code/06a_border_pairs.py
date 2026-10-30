@@ -63,13 +63,26 @@ view = g4.cx[68:80.5, 20.5:31.5]
 for role, c in colors.items():
     part = view[view.role == role]
     if len(part):
-        part.plot(ax=ax, color=c, edgecolor="white", linewidth=0.4, label=role)
+        part.plot(ax=ax, color=c, edgecolor="white" if role != "other" else "#dddddd",
+                  linewidth=0.9 if role != "other" else 0.3, label=role)
 view[view.ST_NM == "Rajasthan"].dissolve().boundary.plot(ax=ax, color="black", linewidth=0.9)
 for _, r in view[view.role != "other"].iterrows():
-    p = r.geometry.representative_point()
-    ax.text(p.x, p.y, r.DISTRICT, fontsize=5, ha="center", color="white" if "border" in r.role else "#555")
+    # label the largest part only, so multi-part districts get one label
+    geom_ = max(r.geometry.geoms, key=lambda q: q.area) if r.geometry.geom_type == "MultiPolygon" else r.geometry
+    p = geom_.representative_point()
+    ax.text(p.x, p.y, r.DISTRICT, fontsize=5, ha="center", va="center",
+            color="white" if "border" in r.role else "#555")
+# Chittaurgarh is one district in two pieces; mark the detached piece
+chit = view[view.DISTRICT == "Chittaurgarh"].geometry.iloc[0]
+if chit.geom_type == "MultiPolygon":
+    small = sorted(chit.geoms, key=lambda q: q.area)[-2].representative_point()
+    ax.annotate("Chittaurgarh\n(detached part)", xy=(small.x, small.y), xytext=(small.x + 3.0, small.y - 1.9),
+                fontsize=5.5, arrowprops=dict(arrowstyle="-", lw=0.6), ha="left")
 handles = [plt.Rectangle((0, 0), 1, 1, color=colors[k]) for k in list(colors)[:3]]
 ax.legend(handles, list(colors)[:3], loc="lower left", fontsize=7, frameon=False)
+fig.text(0.02, 0.01, "Whole districts only (NFHS reports one value per district). Census 2011 boundaries, "
+         "as used by NFHS-4/5;\nlater splits (e.g. Kotputli-Behror, Balotra, Deeg, Salumbar) are inside their 2011 parent.",
+         fontsize=5.5, color="#555")
 ax.set_axis_off()
 ax.set_title(f"Border sample: {len(raj_codes)} Rajasthan and {len(nb_codes)} neighbour districts (2011 boundaries)", fontsize=9)
 fig.tight_layout()

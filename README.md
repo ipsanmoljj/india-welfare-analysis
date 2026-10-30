@@ -8,6 +8,10 @@ following Dube, Lester & Reich (2010).
 
 ![Border sample](output/insurance/fig_border_map.png)
 
+Full walkthrough (data, sample construction, why districts look partial on the
+map, specification, inference, limitations): [`docs/methodology.md`](docs/methodology.md).
+References: [`docs/literature.md`](docs/literature.md).
+
 ## Design
 
 - **Sample:** 51 contiguous Rajasthan–neighbour district pairs from the Census
