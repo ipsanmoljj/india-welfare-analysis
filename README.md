@@ -1,4 +1,63 @@
-# Welfare analysis of PM Ujjwala Yojana (PMUY) in Rajasthan: evidence from NFHS-4 and NFHS-5
+# Rajasthan's state health insurance (BSBY) and welfare: a border-district DiD
+
+**Main study.** Rajasthan launched the Bhamashah Swasthya Bima Yojana (BSBY) on
+13 Dec 2015 (merged into AB-MGRSBY with Ayushman Bharat in 2019). Neighbouring
+states had RSBY and then PM-JAY. We compare Rajasthan's border districts with the
+districts directly across the state line, NFHS-4 (2015-16) → NFHS-5 (2019-21),
+following Dube, Lester & Reich (2010).
+
+![Border sample](output/insurance/fig_border_map.png)
+
+## Design
+
+- **Sample:** 51 contiguous Rajasthan–neighbour district pairs from the Census
+  2011 map (`code/06a_border_pairs.py`). 23 Rajasthan and 26 neighbour districts;
+  every pair shares ≥ 7 km of border. 40 pairs are used: 5 neighbour districts
+  split after NFHS-4 (Panchmahal, Sabarkantha, Bhiwani, Shajapur, Firozpur) have
+  no comparable NFHS-4 value.
+- **Specification:** ΔY_ip = β·Rajasthan_i + pair FE, i.e. a within-pair DiD.
+  SEs are two-way clustered by Rajasthan district and neighbour district.
+- **Pre-trend:** three-round state event study (NFHS-3 → 4 → 5) with Karan et
+  al. (2017) notation: φ2 = pre-period DiD, φ3 = post-period DiD. Permutation
+  inference across states (Abadie et al. 2010).
+- **Baseline caveat:** Rajasthan's NFHS-4 fieldwork ran 23 Jan – 21 Jul 2016,
+  after launch. Early enrolment inflates the baseline, so β is a lower bound.
+
+## Results (`code/06_insurance_border.py`)
+
+| Outcome (border-pair DiD) | All borders | Drop Gujarat | MP only | Pairs ≥10 km |
+|---|---|---|---|---|
+| Insurance coverage (pp) | **+52.8*** (5.1)** | +51.2*** | +45.4*** | +52.0*** |
+| OOP per delivery, public facility (Rs) | −253 (702) | −268 | −840 (1055) | −294 |
+| log OOP | −0.08 (0.31) | −0.08 | −0.28 | −0.10 |
+| Institutional births (pp) | −1.2 (2.3) | −2.1 | −2.2 | −1.5 |
+| Placebo: electricity (pp) | +3.2 (3.5) | +1.7 | +1.9 | +3.2 |
+| Placebo: women 10+ yrs school (pp) | +3.1 (1.7), p=0.08 | +2.5 | +0.3 | +2.6 |
+
+State event study (insurance coverage): Rajasthan 4.5% → 18.7% → **87.8%**.
+Against its five neighbours, the pre-trend DiD is φ2 = +4.1 pp and the post DiD is
+φ3 = +56.4 pp. Rajasthan's post-period jump ranks 1st of 26 states (permutation
+p = 0.04).
+
+**Reading:** The scheme moved coverage enormously, and the result is robust to
+every sample. Out-of-pocket spending on deliveries falls in point estimate but
+imprecisely. This matches Karan, Yip & Mahal (2017), who find RSBY did not
+reduce OOP. Deliveries are a narrow window on financial protection, since
+public-facility deliveries are already near-free under JSY.
+
+## Run
+
+```bash
+pip install pandas statsmodels linearmodels matplotlib geopandas
+python code/06a_border_pairs.py      # pairs + map (needs geopandas)
+python code/06_insurance_border.py   # border DiD, placebo, state event study
+```
+
+---
+
+# Appendix: earlier PMUY analysis
+
+## Welfare analysis of PM Ujjwala Yojana (PMUY) in Rajasthan: evidence from NFHS-4 and NFHS-5
 
 Class project. PMUY (May 2016) gave free LPG connections to poor households:
 63.59 lakh in Rajasthan by March 2021, 8 crore nationally by Sept 2019. NFHS-4
@@ -44,7 +103,7 @@ its baseline. So the design is:
 - The Rs 450 refill scheme (Jan 2024) comes **after** NFHS-5, so this study cannot
   evaluate it. It enters only the government-cost side of the CBA.
 
-## Run
+### Run (PMUY)
 
 ```bash
 pip install pandas statsmodels linearmodels matplotlib

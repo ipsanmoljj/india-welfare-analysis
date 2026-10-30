@@ -1,0 +1,52 @@
+raj_district,raj_st,raj_dt,nb_district,nb_state,nb_st,nb_dt,shared_km,pair_id
+Banswara,8,27,Panch Mahals,Gujarat,24,17,9.476745561451352,1
+Banswara,8,27,Dohad,Gujarat,24,18,65.13400195793764,2
+Barmer,8,17,Kachchh,Gujarat,24,1,11.303707520489429,3
+Dungarpur,8,26,Panch Mahals,Gujarat,24,17,54.504283094753376,4
+Dungarpur,8,26,Sabar Kantha,Gujarat,24,5,78.08841935789289,5
+Jalor,8,18,Kachchh,Gujarat,24,1,11.992477456466945,6
+Jalor,8,18,Banas Kantha,Gujarat,24,2,149.90841041388157,7
+Sirohi,8,19,Sabar Kantha,Gujarat,24,5,21.722960693306195,8
+Sirohi,8,19,Banas Kantha,Gujarat,24,2,137.0549743300639,9
+Udaipur,8,32,Sabar Kantha,Gujarat,24,5,171.51975628944516,10
+Alwar,8,6,Mewat,Haryana,6,19,95.39345473039974,11
+Alwar,8,6,Mahendragarh,Haryana,6,16,93.95501327812137,12
+Alwar,8,6,Rewari,Haryana,6,17,120.15852522227046,13
+Bharatpur,8,7,Mewat,Haryana,6,19,79.02150159685132,14
+Churu,8,4,Bhiwani,Haryana,6,13,59.89428057479469,15
+Hanumangarh,8,2,Sirsa,Haryana,6,11,196.6926017815088,16
+Hanumangarh,8,2,Bhiwani,Haryana,6,13,9.033045563018625,17
+Hanumangarh,8,2,Hisar,Haryana,6,12,72.60291675207701,18
+Hanumangarh,8,2,Fatehabad,Haryana,6,10,6.869760329364552,19
+Jaipur,8,12,Mahendragarh,Haryana,6,16,21.755804921402593,20
+Jhunjhunun,8,5,Mahendragarh,Haryana,6,16,119.3074849721196,21
+Jhunjhunun,8,5,Bhiwani,Haryana,6,13,36.346662228026965,22
+Sikar,8,13,Mahendragarh,Haryana,6,16,27.156221478373617,23
+Banswara,8,27,Jhabua,Madhya Pradesh,23,47,58.77971859330489,24
+Banswara,8,27,Ratlam,Madhya Pradesh,23,17,83.79680762605355,25
+Baran,8,30,Guna,Madhya Pradesh,23,41,206.0515872178004,26
+Baran,8,30,Shivpuri,Madhya Pradesh,23,6,102.10545785425538,27
+Baran,8,30,Sheopur,Madhya Pradesh,23,1,66.92171745882294,28
+Bhilwara,8,24,Neemuch,Madhya Pradesh,23,15,20.098937592404077,29
+Chittaurgarh,8,28,Mandsaur,Madhya Pradesh,23,16,30.406035495215733,30
+Chittaurgarh,8,28,Neemuch,Madhya Pradesh,23,15,386.3351283019257,31
+Dhaulpur,8,8,Morena,Madhya Pradesh,23,2,132.05431679443495,32
+Jhalawar,8,31,Shajapur,Madhya Pradesh,23,19,139.93993828358754,33
+Jhalawar,8,31,Mandsaur,Madhya Pradesh,23,16,182.5386645532875,34
+Jhalawar,8,31,Ratlam,Madhya Pradesh,23,17,39.3765313901257,35
+Jhalawar,8,31,Rajgarh,Madhya Pradesh,23,25,114.75442910622478,36
+Jhalawar,8,31,Guna,Madhya Pradesh,23,41,47.933197361602666,37
+Karauli,8,9,Morena,Madhya Pradesh,23,2,34.95255794735368,38
+Karauli,8,9,Sheopur,Madhya Pradesh,23,1,37.63271340869692,39
+Kota,8,29,Mandsaur,Madhya Pradesh,23,16,43.759092805571164,40
+Kota,8,29,Sheopur,Madhya Pradesh,23,1,56.0628378728172,41
+Pratapgarh,8,33,Mandsaur,Madhya Pradesh,23,16,67.11251560821441,42
+Pratapgarh,8,33,Neemuch,Madhya Pradesh,23,15,66.67925555711962,43
+Pratapgarh,8,33,Ratlam,Madhya Pradesh,23,17,42.37890698910272,44
+Sawai Madhopur,8,10,Sheopur,Madhya Pradesh,23,1,46.950500039416035,45
+Ganganagar,8,1,Firozpur,Punjab,3,9,68.26656361255073,46
+Hanumangarh,8,2,Muktsar,Punjab,3,10,8.57722518988287,47
+Hanumangarh,8,2,Firozpur,Punjab,3,9,15.778300940112034,48
+Bharatpur,8,7,Mathura,Uttar Pradesh,9,14,103.86190203121915,49
+Bharatpur,8,7,Agra,Uttar Pradesh,9,15,147.16693629713194,50
+Dhaulpur,8,8,Agra,Uttar Pradesh,9,15,159.90627935657375,51
