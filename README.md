@@ -25,9 +25,9 @@ following Dube, Lester & Reich (2010).
 
 ## Results (`code/06_insurance_border.py`)
 
-| Outcome (border-pair DiD) | All borders | Drop Gujarat | MP only | Pairs ≥10 km |
+| Outcome (border-pair DiD; SE in brackets; insurance p<0.001 in all) | All borders | Drop Gujarat | MP only | Pairs ≥10 km |
 |---|---|---|---|---|
-| Insurance coverage (pp) | **+52.8*** (5.1)** | +51.2*** | +45.4*** | +52.0*** |
+| Insurance coverage (pp) | **+52.8 (5.1)** | +51.2 (5.5) | +45.4 (6.2) | +52.0 (5.0) |
 | OOP per delivery, public facility (Rs) | −253 (702) | −268 | −840 (1055) | −294 |
 | log OOP | −0.08 (0.31) | −0.08 | −0.28 | −0.10 |
 | Institutional births (pp) | −1.2 (2.3) | −2.1 | −2.2 | −1.5 |
