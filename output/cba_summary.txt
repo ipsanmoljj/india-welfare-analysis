@@ -1,0 +1,26 @@
+A. CONVERSION (from DiD first stage)
+  first-stage slope b                  = 0.160
+  mean district exposure (NFHS-4)      = 63.3% not on clean fuel
+  implied PMUY effect on clean-fuel use= 10.1 pp of households
+  implied switchers                    = 2.94 crore households
+  conversion rate (switchers/connections) = 37%
+  connection cost per effective switcher  = Rs 4,350
+
+B. PER-HOUSEHOLD CBA, base case (health benefit = 0, as the DiD finds)
+  displaced_share        = 0.56
+  time_benefit_yr        = 6,983.04
+  lpg_cost_yr            = 3,357.50
+  social_npv             = 21,727.64
+  gov_cost_pv            = 9,551.45
+  private_gain_pv        = 31,279.09
+  mvpf                   = 3.27
+  breakeven_health_yr    = 0.00
+
+C. SENSITIVITY (social NPV, Rs per household)
+time_value_share    0.25     0.50      1.00
+refills                                    
+2.00             -2145.0   9718.0   33443.0
+3.00             -1917.0  15877.0   51464.0
+3.95             -1701.0  21728.0   68584.0
+5.00             -1462.0  28194.0   87507.0
+7.00             -1006.0  40512.0  123550.0

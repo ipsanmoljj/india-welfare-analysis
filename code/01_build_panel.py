@@ -12,17 +12,30 @@ ROOT = Path(__file__).resolve().parents[1]
 RAW, CLEAN = ROOT / "data" / "raw", ROOT / "data" / "clean"
 CLEAN.mkdir(parents=True, exist_ok=True)
 
-# Indicator number prefix in the NFHS-5 factsheets -> short variable name
+# Exact indicator name in the district file -> short variable name
 DISTRICT_VARS = {
+    "Households using clean fuel for cooking (%)": "clean_fuel",
+    "Population living in households with electricity (%)": "electricity",
+    "Population living in households that use an improved sanitation facility (%)": "sanitation",
+    "Population living in households with an improved drinkingwater source (%)": "water",
+    "Women who are literate (%)": "women_literate",
+    "Women with 10 or more years of schooling (%)": "women_school10",
+    "Prevalence of symptoms of acute respiratory infection (ARI) in the 2 weeks preceding the survey (%)": "child_ari",
+    "Children under 5 years who are stunted (height for age) (%)": "child_stunted",
+    "Children under 5 years who are underweight (weight for age) (%)": "child_underweight",
+    "Children age 6-59 months who are anaemic ": "child_anaemic",
+    "Nonpregnant women age 15-49 years who are anaemic ": "women_anaemic_np",
+    "Institutional births (%)": "inst_births",  # placebo: not plausibly driven by cooking fuel
+}
+
+# State file uses numbered indicator prefixes
+STATE_VARS = {
     "7.": "electricity",
     "9.": "sanitation",
     "10.": "clean_fuel",
     "65.": "child_ari",
-    "73.": "child_stunted",
-    "81.": "child_anaemic",
-    "82.": "women_anaemic_np",
+    "125.": "spousal_violence",
 }
-STATE_VARS = {**DISTRICT_VARS, "125.": "spousal_violence"}
 
 
 def to_num(s):
@@ -32,30 +45,28 @@ def to_num(s):
     )
 
 
-def pick(df, col, mapping):
-    out = []
-    for prefix, name in mapping.items():
-        sub = df[df[col].str.startswith(prefix + " ")].copy()
-        sub["var"] = name
-        out.append(sub)
-    return pd.concat(out)
-
-
-# District panel
-d = pd.read_csv(RAW / "nfhs5_districts_with_nfhs4.csv")
-d = pick(d, "Indicator", DISTRICT_VARS)
-d["nfhs4"], d["nfhs5"] = to_num(d["NFHS-4"]), to_num(d["NFHS-5"])
-dw = d.pivot_table(index=["State", "District"], columns="var", values=["nfhs4", "nfhs5"])
+# District panel (641 districts; source: SaiSiddhardhaKalla/NFHS, IIPS factsheets)
+d = pd.read_csv(RAW / "nfhs_districts_641_kalla.csv", low_memory=False)
+# Districts created after NFHS-4 have no DISTRICT id and NFHS-4 coded as 0
+d = d[d["DISTRICT"].notna() & d["Indicator"].isin(DISTRICT_VARS)].copy()
+d["var"] = d["Indicator"].map(DISTRICT_VARS)
+d["nfhs4"], d["nfhs5"] = to_num(d["NFHS 4"]), to_num(d["NFHS 5"])
+dw = d.pivot_table(index=["State", "DISTRICT"], columns="var", values=["nfhs4", "nfhs5"], aggfunc="first")
 dw.columns = [f"{v}_{r}" for r, v in dw.columns]
 dw = dw.reset_index()
-# Keep districts observed in both rounds (drops districts created after NFHS-4)
-dw = dw.dropna(subset=["clean_fuel_nfhs4", "clean_fuel_nfhs5"])
+# Keep districts observed in both rounds; 0% clean fuel in NFHS-4 is the missing code
+dw = dw[(dw["clean_fuel_nfhs4"] > 0) & dw["clean_fuel_nfhs5"].notna()]
 dw.to_csv(CLEAN / "district_panel.csv", index=False)
-print(f"district_panel: {len(dw)} districts, {dw.State.nunique()} states")
+print(f"district_panel: {len(dw)} districts, {dw.State.nunique()} states/UTs")
 
 # State panel
 s = pd.read_csv(RAW / "nfhs5_states_with_nfhs4.csv")
-s = pick(s, "indicator", STATE_VARS)
+parts = []
+for prefix, name in STATE_VARS.items():
+    sub = s[s["indicator"].str.startswith(prefix + " ")].copy()
+    sub["var"] = name
+    parts.append(sub)
+s = pd.concat(parts)
 s["nfhs4"], s["nfhs5"] = to_num(s["nfhs4_total"]), to_num(s["nfhs5_total"])
 sw = s.pivot_table(index="state", columns="var", values=["nfhs4", "nfhs5"])
 sw.columns = [f"{v}_{r}" for r, v in sw.columns]

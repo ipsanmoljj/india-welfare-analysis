@@ -1,0 +1,12 @@
+,value
+connection_cost,1600.0
+stove_cost,1000.0
+lpg_resource_cost,850.0
+refill_subsidy,300.0
+refills_per_year,3.95
+full_use_refills,7.0
+collection_hours,660.0
+rural_wage_day,300.0
+time_value_share,0.5
+horizon,10.0
+discount,0.08
