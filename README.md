@@ -74,8 +74,9 @@ negative sign was mean reversion from Rajasthan's higher starting OOP.
 
 **State event study** (insurance coverage): Rajasthan 4.5% → 18.7% → **87.8%**.
 Against its five neighbours, the pre-trend DiD is φ2 = +4.1 pp and the post DiD
-is φ3 = +56.4 pp. Rajasthan's post-period jump ranks 1st of 26 states
-(permutation p = 0.04).
+is φ3 = +56.4 pp. Rajasthan's post-period jump ranks 1st of 27 states
+(permutation p = 0.037; J&K and the merged DNH/Daman & Diu are dropped because their
+boundaries changed between rounds).
 
 ## NFHS-6 (2023-24, provisional): Rajasthan only (`code/07_nfhs6_rajasthan.py`)
 
@@ -97,6 +98,16 @@ group for it, so it is descriptive only.
 
 ## Run
 
+All final results come from one command. The analysis refuses to run unless
+the data audit passes (rules in [`CLAUDE.md`](CLAUDE.md)):
+
+```bash
+pip install pandas statsmodels matplotlib geopandas scipy tabulate
+./run_all.sh
+```
+
+<details><summary>Individual steps</summary>
+
 ```bash
 pip install pandas statsmodels linearmodels matplotlib geopandas
 python code/06a_border_pairs.py      # pairs + map (needs geopandas)
@@ -107,7 +118,10 @@ python code/06_insurance_border.py   # border DiD, robustness, state event study
 
 ---
 
-# Appendix: earlier PMUY analysis
+# Appendix: earlier PMUY analysis (exploratory, NOT final)
+
+> These scripts (`code/01`–`05`) predate the cleaning protocol and read raw data.
+> Their numbers are exploratory and are not results of this study.
 
 ## Welfare analysis of PM Ujjwala Yojana (PMUY) in Rajasthan: evidence from NFHS-4 and NFHS-5
 
@@ -157,7 +171,9 @@ its baseline. So the design is:
 
 ### Run (PMUY)
 
-```bash
+```
+
+</details>bash
 pip install pandas statsmodels linearmodels matplotlib
 python code/01_build_panel.py
 python code/02_pmuy_did.py              # all-India -> output/all_india/

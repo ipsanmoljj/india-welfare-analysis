@@ -9,7 +9,7 @@ Neighbouring states' NFHS-6 compendiums are not in the repo, so this is a
 Rajasthan-only persistence check, not a border DiD. NFHS-6 drops the
 out-of-pocket-per-delivery indicator.
 
-Output: data/clean/nfhs6_rajasthan_districts.csv
+Output: data/interim/nfhs6_rajasthan_extracted.csv (validated by 00_clean_and_checks.py)
 """
 import re
 import subprocess
@@ -45,20 +45,8 @@ df = pd.DataFrame({"district": toc})
 for var, vals in rows.items():
     df[f"{var}_6"] = [v[0] for v in vals]
     df[f"{var}_5"] = [v[1] for v in vals]
-out = ROOT / "data" / "clean" / "nfhs6_rajasthan_districts.csv"
+out = ROOT / "data" / "interim" / "nfhs6_rajasthan_extracted.csv"
+out.parent.mkdir(parents=True, exist_ok=True)
 df.to_csv(out, index=False)
 print(df.to_string(index=False))
 
-# Persistence check: border vs interior Rajasthan districts, NFHS-5 -> NFHS-6
-pairs = pd.read_csv(ROOT / "data" / "clean" / "border_pairs.csv")
-MAP_NAMES = {"Chittorgarh": "Chittaurgarh", "Dholpur": "Dhaulpur", "Jalore": "Jalor", "Jhunjhunu": "Jhunjhunun"}
-df["border"] = df["district"].replace(MAP_NAMES).isin(set(pairs.raj_district))
-for r in ["5", "6"]:
-    df[f"private_{r}"] = df[f"inst_{r}"] - df[f"inst_public_{r}"]
-summ = df.groupby("border")[[f"{v}_{r}" for v in ["insur", "inst_public", "private"] for r in ["5", "6"]]].mean()
-summ.index = summ.index.map({True: "border (23)", False: "interior (10)"})
-lines = ["NFHS-5 (2019-21) -> NFHS-6 (2023-24), Rajasthan district means", summ.round(1).T.to_string()]
-text_out = "\n".join(lines)
-print(text_out)
-(ROOT / "output" / "insurance").mkdir(parents=True, exist_ok=True)
-(ROOT / "output" / "insurance" / "nfhs6_persistence.txt").write_text(text_out + "\n")

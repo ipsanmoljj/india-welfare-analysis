@@ -15,7 +15,11 @@ Strategy (decided before re-running any regression):
 
 Outputs:
   data/clean/insurance_district_clean.csv   one row per comparable district
+  data/clean/state_insurance_clean.csv      NFHS-3/4/5 state panel (event study)
+  data/clean/nfhs6_rajasthan_districts.csv  validated NFHS-6 Rajasthan extract
   output/checks/data_audit.md               pass/fail log of every check
+  output/checks/audit_status.txt            PASS only if every check passes;
+                                            analysis scripts refuse to run otherwise
 """
 import re
 import subprocess
@@ -108,13 +112,51 @@ check("Cross-source: Kalla vs pratapvardhan (341 phase-1 districts)",
       "; ".join(f"{r.var}-{r.round}: {r.share_exact:.0%} of {r.n}" for r in cmp.itertuples()))
 
 # Cross-source: NFHS-5 column printed in the NFHS-6 Rajasthan compendium
-n6 = pd.read_csv(CLEAN / "nfhs6_rajasthan_districts.csv")
+n6 = pd.read_csv(ROOT / "data" / "interim" / "nfhs6_rajasthan_extracted.csv")
 n6["key"] = "rajast" + n6["district"].replace({"Chittorgarh": "Chittaurgarh", "Dholpur": "Dhaulpur",
                                                 "Jalore": "Jalor"}).map(norm)
 m6 = w.merge(n6, on="key", suffixes=("", "_n6"))
 diffs = {v: (m6[f"{v}_5"] - m6[f"{v}_5_n6"]).abs().max() for v in ["insur", "inst", "inst_public", "electricity"]}
 check("Cross-source: Kalla NFHS-5 vs NFHS-6 compendium (Rajasthan)", len(m6) == 33 and max(diffs.values()) < 0.05,
       f"{len(m6)}/33 districts matched; max abs diff {diffs}")
+
+# NFHS-6 extract: ranges and logic, then save the validated copy
+n6_bad = sum(((n6[c] < 0) | (n6[c] > 100)).sum() for c in n6.columns if c[-2:] in ("_5", "_6"))
+n6_logic = sum((n6[f"inst_public_{r}"] > n6[f"inst_{r}"] + 0.5).sum() for r in "56")
+check("NFHS-6 extract: 33 districts, values in [0, 100], public <= institutional births",
+      len(n6) == 33 and n6_bad == 0 and n6_logic == 0 and not n6.isna().any().any(),
+      f"{len(n6)} districts, {n6_bad} range violations, {n6_logic} logic violations")
+n6.drop(columns=["key"]).to_csv(CLEAN / "nfhs6_rajasthan_districts.csv", index=False)
+
+# State panel for the event study: NFHS-3 and NFHS-4 (HT file), NFHS-4 and NFHS-5 (pratapvardhan)
+STATE_NAMES = {"Andaman & Nicobar Islands": "Andaman and Nicobar Islands", "NCT Delhi": "Delhi",
+               "Jammu & Kashmir": "Jammu and Kashmir"}
+# Boundaries changed between rounds: J&K lost Ladakh (2019); DNH and Daman & Diu merged (2020)
+STATE_DROP = {"Jammu and Kashmir", "Ladakh", "Dadra and Nagar Haveli", "Daman and Diu",
+              "Dadra & Nagar Haveli and Daman & Diu", "India"}
+s3 = pd.read_csv(RAW / "nfhs4_states_ht.csv")
+s3 = s3[s3["indicator"].str.contains("health scheme or health insurance", case=False)]
+s3 = s3[["state", "total_2005-06", "total"]].rename(columns={"total_2005-06": "y2005", "total": "y2015_ht"})
+s5 = pd.read_csv(RAW / "nfhs5_states_with_nfhs4.csv")
+s5 = s5[s5["indicator"].str.contains("health insurance", case=False)]
+s5 = s5[["state", "nfhs4_total", "nfhs5_total"]].rename(columns={"nfhs4_total": "y2015", "nfhs5_total": "y2020"})
+for f in (s3, s5):
+    f["state"] = f["state"].replace(STATE_NAMES)
+st = s3.merge(s5, on="state", how="outer", indicator=True)
+unmatched = sorted(set(st.loc[st._merge != "both", "state"]) - STATE_DROP)
+dropped = sorted(set(st["state"]) & STATE_DROP)
+st = st[(st._merge == "both") & ~st.state.isin(STATE_DROP)].drop(columns="_merge")
+for c in ["y2005", "y2015_ht", "y2015", "y2020"]:
+    st[c] = pd.to_numeric(st[c], errors="coerce").replace(0, np.nan)
+st = st.dropna(subset=["y2005", "y2015", "y2020"])
+check("State panel: names harmonised, no unmatched states", not unmatched,
+      f"{len(st)} states/UTs; dropped (boundary change or aggregate): {', '.join(dropped)}; unmatched: {unmatched}")
+gap = (st["y2015"] - st["y2015_ht"]).abs()
+check("State panel: NFHS-4 agrees across the two files (<= 1 pp)", gap.max() <= 1.0,
+      f"max gap {gap.max():.1f} pp ({', '.join(st.loc[gap > 0, 'state'])}); NFHS-5 file's revised NFHS-4 used")
+check("State panel: values in [0, 100]",
+      ((st[["y2005", "y2015", "y2020"]] < 0) | (st[["y2005", "y2015", "y2020"]] > 100)).sum().sum() == 0, "")
+st.drop(columns=["y2015_ht"]).to_csv(CLEAN / "state_insurance_clean.csv", index=False)
 
 # Ranges and logic
 bad_pct = sum(((w[f"{v}_{r}"] < 0) | (w[f"{v}_{r}"] > 100)).sum() for v in PCT for r in "45")
@@ -229,5 +271,8 @@ md = ["# Data audit: BSBY border analysis", "",
       bal.round(2).to_markdown(index=False), "",
       "## Cross-source agreement detail", "", cmp.round(3).to_markdown(index=False)]
 (CHK / "data_audit.md").write_text("\n".join(md) + "\n")
+status = "PASS" if all(line.startswith("| PASS") for line in log) else "FAIL"
+(CHK / "audit_status.txt").write_text(status + "\n")
+print(f"AUDIT STATUS: {status}")
 print("\n".join(log))
 print(f"\nwrote {CLEAN / 'insurance_district_clean.csv'} and {CHK / 'data_audit.md'}")

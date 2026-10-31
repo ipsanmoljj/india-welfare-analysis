@@ -177,7 +177,7 @@ level with NFHS-3.
 - **φ3 (post-period DiD, 2016→2020):** +56.4 pp.
 - **φ3 − φ2:** +52.3 pp (trend-adjusted; Karan et al. 2017 notation).
 - **Permutation (Abadie et al. 2010; Conley & Taber 2011):** each of 26 states is
-  "treated" in turn. Rajasthan's post-period gap ranks 1st, so p = 1/26 ≈ 0.04.
+  "treated" in turn. Rajasthan's post-period gap ranks 1st of 27, so p = 1/27 ≈ 0.037. State names are harmonised across files; J&K and the merged DNH/Daman & Diu are dropped because their boundaries changed.
 
 ## 7. Results
 
@@ -188,7 +188,7 @@ level with NFHS-3.
 | Institutional births | −1.2 pp, n.s. | No change in use |
 | Placebo: electricity | +3.2, n.s. | Passes |
 | Placebo: women's schooling | +3.1, p = 0.08 | Borderline; report it |
-| State event study | Parallel, then 1st of 26 | Supports the design |
+| State event study | Parallel, then 1st of 27 | Supports the design |
 
 **Why OOP may not fall:** public-facility deliveries were already nearly free
 under JSY, so there was little to cut. This is consistent with Karan, Yip & Mahal

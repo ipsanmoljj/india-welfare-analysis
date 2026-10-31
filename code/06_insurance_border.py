@@ -31,6 +31,11 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output" / "insurance"
 OUT.mkdir(parents=True, exist_ok=True)
 
+# Refuse to run on data that has not passed every check in 00_clean_and_checks.py
+status = (ROOT / "output" / "checks" / "audit_status.txt")
+assert status.exists() and status.read_text().strip() == "PASS", \
+    "Run code/00_clean_and_checks.py first; the data audit must PASS before any analysis."
+
 # Cleaned data from code/00_clean_and_checks.py: OOP in real 2019-21 rupees,
 # 0 -> missing, 1.5*IQR-capped OOP versions, z-scores (NFHS-4 neighbour reference)
 w = pd.read_csv(ROOT / "data" / "clean" / "insurance_district_clean.csv")
@@ -131,17 +136,8 @@ for y in ["oop_real", "log_oop"]:
 print("\nOOP POWER\n" + "\n".join(pw))
 
 # ---------------------------------------------------------------- state event study
-s3 = pd.read_csv(ROOT / "data" / "raw" / "nfhs4_states_ht.csv")
-s3 = s3[s3["indicator"].str.contains("health scheme or health insurance", case=False)]
-s3 = s3[["state", "total_2005-06", "total"]].rename(columns={"total_2005-06": "y2005", "total": "y2015_ht"})
-s5 = pd.read_csv(ROOT / "data" / "raw" / "nfhs5_states_with_nfhs4.csv")
-s5 = s5[s5["indicator"].str.contains("health insurance", case=False)]
-s5 = s5[["state", "nfhs4_total", "nfhs5_total"]].rename(columns={"nfhs4_total": "y2015", "nfhs5_total": "y2020"})
-st = s3.merge(s5, on="state")  # states with the same name in both files
-for c in ["y2005", "y2015", "y2020"]:
-    st[c] = pd.to_numeric(st[c], errors="coerce")
-st = st.dropna(subset=["y2005", "y2015", "y2020"])
-st = st[~st.state.isin(["India"])]
+# Cleaned state panel (names harmonised, boundary-changed states dropped)
+st = pd.read_csv(ROOT / "data" / "clean" / "state_insurance_clean.csv")
 st["pre"] = st["y2015"] - st["y2005"]    # 2005-06 -> 2015-16
 st["post"] = st["y2020"] - st["y2015"]   # 2015-16 -> 2019-21
 
@@ -178,3 +174,15 @@ ax.set_ylabel("Households with any member insured (%)")
 ax.set_title("Health insurance coverage: Rajasthan vs neighbouring states")
 fig.tight_layout()
 fig.savefig(OUT / "fig_state_event_study.png", dpi=200)
+
+# ---------------------------------------------------------------- NFHS-6 persistence (descriptive)
+n6 = pd.read_csv(ROOT / "data" / "clean" / "nfhs6_rajasthan_districts.csv")
+MAP_NAMES = {"Chittorgarh": "Chittaurgarh", "Dholpur": "Dhaulpur", "Jalore": "Jalor", "Jhunjhunu": "Jhunjhunun"}
+n6["border"] = n6["district"].replace(MAP_NAMES).isin(set(pairs.raj_district))
+for r in ["5", "6"]:
+    n6[f"private_{r}"] = n6[f"inst_{r}"] - n6[f"inst_public_{r}"]
+summ = n6.groupby("border")[[f"{v}_{r}" for v in ["insur", "inst_public", "private"] for r in ["5", "6"]]].mean()
+summ.index = summ.index.map({True: f"border ({int(n6.border.sum())})", False: f"interior ({int((~n6.border).sum())})"})
+txt = "NFHS-5 (2019-21) -> NFHS-6 (2023-24), Rajasthan district means\n" + summ.round(1).T.to_string()
+print("\n" + txt)
+(OUT / "nfhs6_persistence.txt").write_text(txt + "\n")

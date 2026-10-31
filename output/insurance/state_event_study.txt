@@ -8,5 +8,5 @@ Madhya Pradesh    4.8   17.7   38.1 12.9  20.4
      Rajasthan    4.5   18.7   87.8 14.2  69.1
  Uttar Pradesh    1.2    6.1   15.9  4.9   9.8
 vs neighbours (n=5): pre-trend DiD phi2 = +4.1 pp, post DiD phi3 = +56.4 pp, trend-adjusted phi3 - phi2 = +52.3 pp
-vs all other states (n=25): pre-trend DiD phi2 = -9.4 pp, post DiD phi3 = +58.7 pp, trend-adjusted phi3 - phi2 = +68.1 pp
-Permutation: Rajasthan post-DiD ranks 1 of 26; p = 0.038
+vs all other states (n=26): pre-trend DiD phi2 = -8.6 pp, post DiD phi3 = +58.7 pp, trend-adjusted phi3 - phi2 = +67.3 pp
+Permutation: Rajasthan post-DiD ranks 1 of 27; p = 0.037
