@@ -176,7 +176,7 @@ level with NFHS-3.
 - **φ2 (pre-period DiD, 2005→2016):** +4.1 pp. Roughly parallel.
 - **φ3 (post-period DiD, 2016→2020):** +56.4 pp.
 - **φ3 − φ2:** +52.3 pp (trend-adjusted; Karan et al. 2017 notation).
-- **Permutation (Abadie et al. 2010; Conley & Taber 2011):** each of 26 states is
+- **Permutation (Abadie et al. 2010; Conley & Taber 2011):** each of 27 states is
   "treated" in turn. Rajasthan's post-period gap ranks 1st of 27, so p = 1/27 ≈ 0.037. State names are harmonised across files; J&K and the merged DNH/Daman & Diu are dropped because their boundaries changed.
 
 ## 7. Results
