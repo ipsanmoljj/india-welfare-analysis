@@ -10,6 +10,8 @@ Baseline caveat: Rajasthan's NFHS-4 fieldwork (23 Jan - 21 Jul 2016) started
 six weeks after BSBY launched. Early enrolment raises the "pre" level, which
 biases beta toward zero, so the estimates are lower bounds.
 
+Reads the cleaned data from code/00_clean_and_checks.py.
+
 Border-pair specification (first differences = district FE, 2 periods):
     dY_ip = beta * Rajasthan_i + pair_p + e_ip
 Each district appears once per pair it belongs to, so SEs are two-way
@@ -29,31 +31,15 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output" / "insurance"
 OUT.mkdir(parents=True, exist_ok=True)
 
-VARS = {
-    "Households with any usual member covered under a health insurance/financing scheme (%)": "insur",
-    "Average out-of-pocket expenditure per delivery in a public health facility (Rs)": "oop",
-    "Institutional births (%)": "inst",
-    "Institutional births in public facility (%)": "inst_public",
-    # Placebos: should not respond to a health insurance scheme
-    "Population living in households with electricity (%)": "electricity",
-    "Women with 10 or more years of schooling (%)": "women_school10",
-}
-OUTCOMES = ["insur", "oop", "log_oop", "inst", "inst_public"]
+# Cleaned data from code/00_clean_and_checks.py: OOP in real 2019-21 rupees,
+# 0 -> missing, 1.5*IQR-capped OOP versions, z-scores (NFHS-4 neighbour reference)
+w = pd.read_csv(ROOT / "data" / "clean" / "insurance_district_clean.csv")
+OUTCOMES = ["insur", "oop_real", "log_oop", "inst", "inst_public"]
 PLACEBOS = ["electricity", "women_school10"]
-
-# ---------------------------------------------------------------- district data
-d = pd.read_csv(ROOT / "data" / "raw" / "nfhs_districts_641_kalla.csv", low_memory=False)
-d = d[d["Indicator"].isin(VARS)].copy()
-d["dt"] = pd.to_numeric(d["DT_CEN_CD"], errors="coerce")
-d = d.dropna(subset=["dt"])
-d["v"] = d["Indicator"].map(VARS)
-for r, c in [("4", "NFHS 4"), ("5", "NFHS 5")]:
-    d[r] = pd.to_numeric(d[c], errors="coerce").replace(0, np.nan)  # 0 = missing code
-w = d.pivot_table(index=["ST_CEN_CD", "dt"], columns="v", values=["4", "5"], aggfunc="first")
-w.columns = [f"{v}_{r}" for r, v in w.columns]
-w = w.reset_index()
-w["log_oop_4"], w["log_oop_5"] = np.log(w["oop_4"]), np.log(w["oop_5"])
-for v in OUTCOMES + PLACEBOS:
+CAPPED = {"oop_real": "oop_cap", "log_oop": "log_oop_cap"}
+ZVAR = {"insur": "insur_z", "oop_real": "oop_cap_z", "log_oop": "log_oop_z", "inst": "inst_z",
+        "inst_public": "inst_public_z", "electricity": "electricity_z", "women_school10": "women_school10_z"}
+for v in set(OUTCOMES + PLACEBOS + list(CAPPED.values()) + list(ZVAR.values())):
     w[f"d_{v}"] = w[f"{v}_5"] - w[f"{v}_4"]
 
 # ---------------------------------------------------------------- stacked pairs
@@ -65,15 +51,58 @@ stack["g_raj"] = stack["raj_district"].astype("category").cat.codes
 stack["g_nb"] = stack["nb_district"].astype("category").cat.codes
 
 
-def pair_did(y, data):
-    sub = data.dropna(subset=[f"d_{y}"])
-    # keep pairs where both sides are observed
-    sub = sub[sub.groupby("pair_id")["raj"].transform("nunique") == 2]
-    m = smf.ols(f"d_{y} ~ raj + C(pair_id)", sub).fit(
-        cov_type="cluster", cov_kwds={"groups": sub[["g_raj", "g_nb"]].to_numpy()})
+def pair_did(y, data, base=None):
+    """Within-pair DiD; base = column of the NFHS-4 level to control for."""
+    sub = data.dropna(subset=[f"d_{y}"] + ([base] if base else []))
+    sub = sub[sub.groupby("pair_id")["raj"].transform("nunique") == 2]  # both sides observed
+    f = f"d_{y} ~ raj + C(pair_id)" + (f" + {base}" if base else "")
+    m = smf.ols(f, sub).fit(cov_type="cluster", cov_kwds={"groups": sub[["g_raj", "g_nb"]].to_numpy()})
     return m, sub
 
 
+def est(m):
+    return m.params["raj"], m.bse["raj"], m.pvalues["raj"]
+
+
+# ---------------------------------------------------------------- main table
+rows = []
+for y in OUTCOMES + PLACEBOS:
+    m, sub = pair_did(y, stack)
+    b, se, p = est(m)
+    row = dict(outcome=y, placebo=y in PLACEBOS, pairs=sub.pair_id.nunique(),
+               raj_mean_nfhs4=sub.loc[sub.raj == 1, f"{y}_4"].mean(), beta=b, se=se, p=p)
+    # (2) drop small-sample (25-49 case) values where flags are recoverable
+    flag = f"{y.replace('_real', '').replace('log_', '')}_4_small"
+    if flag in stack:
+        keep = ~(stack[flag] | stack[flag.replace("_4_", "_5_")])
+        n_drop = int((~keep).sum())
+        row["beta_no_small"] = est(pair_did(y, stack[keep])[0])[0] if n_drop else b
+        row["n_small_dropped"] = n_drop
+    # (3) 1.5*IQR-capped OOP
+    if y in CAPPED:
+        cb, cse, cp = est(pair_did(CAPPED[y], stack)[0])
+        row.update(beta_capped=cb, se_capped=cse, p_capped=cp)
+    # (4) standardised: effect in SDs of the NFHS-4 neighbour distribution
+    zb, zse, zp = est(pair_did(ZVAR[y], stack)[0])
+    row.update(beta_std=zb, se_std=zse)
+    # (5) control for the NFHS-4 level (response to baseline imbalance / mean reversion)
+    ab, ase, ap = est(pair_did(y, stack, base=f"{y}_4")[0])
+    row.update(beta_base_ctrl=ab, se_base_ctrl=ase, p_base_ctrl=ap)
+    # (6) leave-one-out: each pair, and each Rajasthan district with all its pairs
+    loo_pair = [est(pair_did(y, stack[stack.pair_id != i])[0])[0] for i in sub.pair_id.unique()]
+    loo_raj = [est(pair_did(y, stack[stack.raj_district != d])[0]) for d in sub.raj_district.unique()]
+    row.update(loo_pair_min=min(loo_pair), loo_pair_max=max(loo_pair),
+               loo_raj_min=min(x[0] for x in loo_raj), loo_raj_max=max(x[0] for x in loo_raj),
+               loo_raj_max_p=max(x[2] for x in loo_raj),
+               loo_raj_most_influential=sub.raj_district.unique()[
+                   int(np.argmax([abs(x[0] - b) for x in loo_raj]))])
+    rows.append(row)
+main = pd.DataFrame(rows)
+main.to_csv(OUT / "border_pair_did_main.csv", index=False)
+print("BORDER-PAIR DiD (cleaned data), two-way clustered SEs")
+print(main.round(3).T.to_string())
+
+# ---------------------------------------------------------------- sample robustness
 rows = []
 samples = {
     "all borders": stack,
@@ -84,14 +113,22 @@ samples = {
 for label, data in samples.items():
     for y in OUTCOMES + PLACEBOS:
         m, sub = pair_did(y, data)
-        raj_pre = sub.loc[sub.raj == 1, f"{y}_4"].mean()
-        rows.append(dict(sample=label, outcome=y, placebo=y in PLACEBOS, beta=m.params["raj"],
-                         se=m.bse["raj"], p=m.pvalues["raj"], pairs=sub.pair_id.nunique(),
-                         raj_mean_nfhs4=raj_pre))
+        b, se, p = est(m)
+        rows.append(dict(sample=label, outcome=y, placebo=y in PLACEBOS, beta=b, se=se, p=p,
+                         pairs=sub.pair_id.nunique(), raj_mean_nfhs4=sub.loc[sub.raj == 1, f"{y}_4"].mean()))
 res = pd.DataFrame(rows)
 res.to_csv(OUT / "border_pair_did.csv", index=False)
-print("BORDER-PAIR DiD (NFHS-4 -> NFHS-5), two-way clustered SEs")
+print("\nSAMPLE ROBUSTNESS")
 print(res.round(3).to_string(index=False))
+
+# Power for OOP: 95% CI and minimum detectable effect (80% power, 5% two-sided)
+pw = []
+for y in ["oop_real", "log_oop"]:
+    r = main.set_index("outcome").loc[y]
+    pw.append(f"{y}: beta {r.beta:,.3f}, 95% CI [{r.beta - 1.96 * r.se:,.3f}, {r.beta + 1.96 * r.se:,.3f}], "
+              f"MDE {2.8 * r.se:,.3f}, Rajasthan NFHS-4 mean {r.raj_mean_nfhs4:,.3f}")
+(OUT / "oop_power.txt").write_text("\n".join(pw) + "\n")
+print("\nOOP POWER\n" + "\n".join(pw))
 
 # ---------------------------------------------------------------- state event study
 s3 = pd.read_csv(ROOT / "data" / "raw" / "nfhs4_states_ht.csv")

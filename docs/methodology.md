@@ -100,6 +100,38 @@ partial district is impossible. Three things make the map look otherwise:
 border *districts*, not border *villages*. Sood et al. (2014) compare villages.
 A GPS-based version is future work.
 
+## 4b. Data cleaning and sanity checks (`code/00_clean_and_checks.py`)
+
+The strategy was fixed before re-running any regression:
+
+1. **Missing values (no imputation).** 0 is the factsheet code for suppressed
+   (<25 cases) or non-comparable values, so 0 → missing. Districts split after
+   NFHS-4 are dropped (structural). A test for differential missingness between
+   Rajasthan and neighbours among comparable districts finds none (0/23 vs 0/21).
+2. **Small-sample flags.** The 641-district file strips NFHS's ( ) marks for
+   25–49-case estimates. They survive only in the pratapvardhan file (phase-1
+   states). Of our border states only Gujarat is covered, with no flagged values.
+3. **Sanity checks:** cross-source agreement (100% exact across two files;
+   33/33 against the NFHS-6 compendium's NFHS-5 column), unique keys, ranges,
+   public ≤ institutional births, large jumps listed for inspection, baseline balance.
+4. **Outliers (OOP only).** Converted to real 2019-21 rupees with CPI-C (NFHS-4 ×1.209),
+   then capped at Q3 + 1.5·IQR with fences per round over all comparable
+   districts. The log outcome uses fences computed on the log scale.
+   Percentages are bounded and left uncapped.
+5. **Standardisation.** z = (x − μ)/σ with μ, σ from NFHS-4 neighbour border
+   districts, applied to both rounds and sides. Scaling each round separately
+   would erase the change the DiD measures.
+6. **Leave-one-out.** Each pair, and each Rajasthan district with all its pairs,
+   dropped in turn.
+
+**Findings that changed the interpretation:**
+- No border district reaches the OOP fence, so the OOP null is not outlier-driven.
+- Rajasthan border districts had higher baseline OOP. Controlling for the
+  NFHS-4 level flips the OOP estimate from −Rs 356 to +Rs 227 (n.s.): the
+  negative point estimate was mean reversion.
+- The OOP sign also depends on one district: dropping Baran moves it to +Rs 30.
+  Insurance coverage is stable (+51.3 to +53.9) to every exclusion.
+
 ## 5. Main specification: border-pair DiD (`code/06_insurance_border.py`)
 
 Following Dube, Lester & Reich (2010):

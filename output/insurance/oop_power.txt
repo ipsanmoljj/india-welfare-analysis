@@ -1,0 +1,2 @@
+oop_real: beta -356.195, 95% CI [-2,002.908, 1,290.518], MDE 2,352.447, Rajasthan NFHS-4 mean 2,235.456
+log_oop: beta -0.078, 95% CI [-0.692, 0.537], MDE 0.878, Rajasthan NFHS-4 mean 7.475

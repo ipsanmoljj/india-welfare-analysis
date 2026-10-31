@@ -27,27 +27,55 @@ References: [`docs/literature.md`](docs/literature.md).
 - **Baseline caveat:** Rajasthan's NFHS-4 fieldwork ran 23 Jan – 21 Jul 2016,
   after launch. Early enrolment inflates the baseline, so β is a lower bound.
 
-## Results (`code/06_insurance_border.py`)
+## Data cleaning and checks (`code/00_clean_and_checks.py`)
 
-| Outcome (border-pair DiD; SE in brackets; insurance p<0.001 in all) | All borders | Drop Gujarat | MP only | Pairs ≥10 km |
-|---|---|---|---|---|
-| Insurance coverage (pp) | **+52.8 (5.1)** | +51.2 (5.5) | +45.4 (6.2) | +52.0 (5.0) |
-| OOP per delivery, public facility (Rs) | −253 (702) | −268 | −840 (1055) | −294 |
-| log OOP | −0.08 (0.31) | −0.08 | −0.28 | −0.10 |
-| Institutional births (pp) | −1.2 (2.3) | −2.1 | −2.2 | −1.5 |
-| Placebo: electricity (pp) | +3.2 (3.5) | +1.7 | +1.9 | +3.2 |
-| Placebo: women 10+ yrs school (pp) | +3.1 (1.7), p=0.08 | +2.5 | +0.3 | +2.6 |
+All checks pass (full log: [`output/checks/data_audit.md`](output/checks/data_audit.md)):
 
-State event study (insurance coverage): Rajasthan 4.5% → 18.7% → **87.8%**.
-Against its five neighbours, the pre-trend DiD is φ2 = +4.1 pp and the post DiD is
-φ3 = +56.4 pp. Rajasthan's post-period jump ranks 1st of 26 states (permutation
-p = 0.04).
+- **Missing values:** no imputation. 0 = suppressed/not-comparable code → missing.
+  The 5 neighbour districts split after NFHS-4 are excluded. Among comparable
+  districts, OOP is missing for 0/23 Rajasthan and 0/21 neighbours.
+- **Cross-source agreement:** 100% exact on every outcome and round against
+  the pratapvardhan file, and 33/33 against the NFHS-5 column in the NFHS-6
+  compendium.
+- **Ranges and logic:** 0 violations.
+- **Small-sample flags (25–49 cases):** stripped in the main file. They are
+  recoverable only for Gujarat, where none of the border districts are flagged.
+- **Outliers:** OOP converted to real 2019-21 rupees (CPI-C), then capped at
+  Q3 + 1.5·IQR (fences per round over all comparable districts: Rs 9,109 / Rs 7,943).
+  **No border district reaches the fence**, so capping doesn't change the estimates.
+- **Standardisation:** z-scores using the NFHS-4 neighbour-border mean and SD,
+  applied to both rounds and both sides.
+- **Baseline balance:** Rajasthan border districts started with higher OOP
+  (+Rs 594, p = 0.09), more public-facility births (+6.8 pp, p = 0.03) and lower
+  electricity (−3.8 pp, p = 0.02). Hence the baseline-control column below.
 
-**Reading:** The scheme moved coverage enormously, and the result is robust to
-every sample. Out-of-pocket spending on deliveries falls in point estimate but
-imprecisely. This matches Karan, Yip & Mahal (2017), who find RSBY did not
-reduce OOP. Deliveries are a narrow window on financial protection, since
-public-facility deliveries are already near-free under JSY.
+## Results (`code/06_insurance_border.py`, cleaned data, 40 pairs)
+
+| Outcome | β (SE) | p | β in SD | Controlling for NFHS-4 level | Leave-one-Rajasthan-district-out range |
+|---|---|---|---|---|---|
+| **Insurance coverage (pp)** | **+52.8 (5.1)** | <0.001 | 7.3 | +55.1 (4.2) | +51.3 to +53.9 |
+| OOP per delivery (real Rs) | −356 (840) | 0.67 | −0.44 | **+227 (212)** | −478 to +30 |
+| log OOP | −0.08 (0.31) | 0.80 | −0.17 | +0.09 (0.12) | −0.14 to +0.05 |
+| Institutional births (pp) | −1.2 (2.3) | 0.62 | −0.09 | +0.8 (1.3) | −1.6 to −0.6 |
+| Public-facility births (pp) | +2.4 (5.4) | 0.66 | 0.12 | +5.5 (3.9) | +1.3 to +4.2 |
+| *Placebo:* electricity (pp) | +3.2 (3.5) | 0.35 | 0.56 | −0.1 (0.6) | +2.0 to +3.9 |
+| *Placebo:* women 10+ yrs school (pp) | +3.1 (1.7) | 0.08 | 0.24 | +2.8 (1.5) | +2.5 to +3.7 |
+
+Capped OOP and the drop-small-sample column are identical to the main estimates
+(nothing binds). Sample robustness (drop Gujarat, MP only, pairs ≥10 km):
+insurance +45 to +52, all p < 0.001; nothing else significant
+([`output/insurance/border_pair_did.csv`](output/insurance/border_pair_did.csv)).
+
+**OOP power:** 95% CI −Rs 2,003 to +Rs 1,291, against a Rajasthan baseline of
+Rs 2,235. The minimum detectable effect (Rs 2,352) exceeds the baseline, so the
+design cannot detect even a complete elimination of delivery OOP. Once the
+NFHS-4 level is controlled for, the point estimate turns positive. The earlier
+negative sign was mean reversion from Rajasthan's higher starting OOP.
+
+**State event study** (insurance coverage): Rajasthan 4.5% → 18.7% → **87.8%**.
+Against its five neighbours, the pre-trend DiD is φ2 = +4.1 pp and the post DiD
+is φ3 = +56.4 pp. Rajasthan's post-period jump ranks 1st of 26 states
+(permutation p = 0.04).
 
 ## NFHS-6 (2023-24, provisional): Rajasthan only (`code/07_nfhs6_rajasthan.py`)
 
@@ -72,7 +100,9 @@ group for it, so it is descriptive only.
 ```bash
 pip install pandas statsmodels linearmodels matplotlib geopandas
 python code/06a_border_pairs.py      # pairs + map (needs geopandas)
-python code/06_insurance_border.py   # border DiD, placebo, state event study
+python code/07_nfhs6_rajasthan.py    # NFHS-6 extraction (used in checks)
+python code/00_clean_and_checks.py   # cleaning + audit
+python code/06_insurance_border.py   # border DiD, robustness, state event study
 ```
 
 ---
