@@ -8,6 +8,8 @@ following Dube, Lester & Reich (2010).
 
 ![Border sample](output/insurance/fig_border_map.png)
 
+**Presenting?** Start with [`docs/presentation_guide.md`](docs/presentation_guide.md): methods, results, every figure, limitations and likely questions.
+
 Full walkthrough (data, sample construction, why districts look partial on the
 map, specification, inference, limitations): [`docs/methodology.md`](docs/methodology.md).
 References: [`docs/literature.md`](docs/literature.md).
@@ -77,6 +79,17 @@ Against its five neighbours, the pre-trend DiD is φ2 = +4.1 pp and the post DiD
 is φ3 = +56.4 pp. Rajasthan's post-period jump ranks 1st of 27 states
 (permutation p = 0.037; J&K and the merged DNH/Daman & Diu are dropped because their
 boundaries changed between rounds).
+
+## Figures (`output/insurance/`)
+
+| Figure | File |
+|---|---|
+| 1. Border sample map | `fig_border_map.png` |
+| 2. State event study, NFHS-3 → 4 → 5 | `fig_state_event_study.png` |
+| 3. Border-district coverage over three rounds | `fig_coverage_three_rounds.png` |
+| 4. Coefficient plot (robustness; outcomes in SD units) | `fig_coefficients.png` |
+
+![Coefficients](output/insurance/fig_coefficients.png)
 
 ## NFHS-6 (2023-24, provisional): Rajasthan only (`code/07_nfhs6_rajasthan.py`)
 

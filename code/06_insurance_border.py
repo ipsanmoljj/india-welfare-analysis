@@ -161,15 +161,19 @@ print(text)
 
 fig, ax = plt.subplots(figsize=(6, 4))
 yrs = [2005.5, 2015.8, 2020.2]
-for _, r in st[st.state.isin(NEIGH)].iterrows():
+nb_st = st[st.state.isin(NEIGH)].sort_values("y2020")
+label_y = []
+for _, r in nb_st.iterrows():
     ax.plot(yrs, r[["y2005", "y2015", "y2020"]], color="#9aa7b8", marker="o", ms=3, lw=1)
-    ax.text(2020.4, r["y2020"], r["state"], fontsize=7, va="center", color="#555")
+    y = r["y2020"] if not label_y else max(r["y2020"], label_y[-1] + 4.5)  # keep labels apart
+    label_y.append(y)
+    ax.text(2020.4, y, f"{r['state']} ({r['y2020']:.0f}%)", fontsize=7, va="center", color="#555")
 ax.plot(yrs, raj[["y2005", "y2015", "y2020"]], color="#c0504d", marker="o", lw=2.2)
-ax.text(2020.4, raj["y2020"], "Rajasthan", fontsize=8, va="center", color="#c0504d", weight="bold")
+ax.text(2020.4, raj["y2020"], f"Rajasthan ({raj['y2020']:.0f}%)", fontsize=8, va="center", color="#c0504d", weight="bold")
 ax.axvline(2015.95, color="black", ls="--", lw=0.8)
 ax.text(2016.1, 92, "BSBY launch\n(Dec 2015)", fontsize=7, va="top")
 ax.set_xticks(yrs, ["NFHS-3\n2005-06", "NFHS-4\n2015-16", "NFHS-5\n2019-21"])
-ax.set_xlim(2004.5, 2023.5)
+ax.set_xlim(2004.5, 2025.5)
 ax.set_ylabel("Households with any member insured (%)")
 ax.set_title("Health insurance coverage: Rajasthan vs neighbouring states")
 fig.tight_layout()
@@ -186,3 +190,63 @@ summ.index = summ.index.map({True: f"border ({int(n6.border.sum())})", False: f"
 txt = "NFHS-5 (2019-21) -> NFHS-6 (2023-24), Rajasthan district means\n" + summ.round(1).T.to_string()
 print("\n" + txt)
 (OUT / "nfhs6_persistence.txt").write_text(txt + "\n")
+
+# ---------------------------------------------------------------- figure: coefficient plot
+LABELS = {"insur": "Insurance coverage", "oop_real": "OOP per delivery (real Rs)", "log_oop": "log OOP per delivery",
+          "inst": "Institutional births", "inst_public": "Public-facility births",
+          "electricity": "Placebo: electricity", "women_school10": "Placebo: women 10+ yrs school"}
+fig, (a1, a2) = plt.subplots(1, 2, figsize=(9, 3.8), gridspec_kw={"width_ratios": [1, 1.25]})
+# Panel A: insurance coverage (pp) across specifications
+spec = [("All borders", res.query("sample == 'all borders' and outcome == 'insur'")),
+        ("Drop Gujarat", res.query("sample.str.startswith('drop Gujarat') and outcome == 'insur'")),
+        ("MP border only", res.query("sample.str.startswith('MP') and outcome == 'insur'")),
+        ("Pairs >= 10 km", res.query("sample.str.startswith('pairs') and outcome == 'insur'"))]
+ys = list(range(len(spec) + 1))[::-1]
+r0 = main.set_index("outcome").loc["insur"]
+pts = [(lab, d.beta.iloc[0], d.se.iloc[0]) for lab, d in spec] + \
+      [("Control NFHS-4 level", r0.beta_base_ctrl, r0.se_base_ctrl)]
+for y, (lab, bta, se) in zip(ys, pts):
+    a1.errorbar(bta, y, xerr=1.96 * se, fmt="o", color="#c0504d", capsize=3, ms=5)
+    a1.text(bta + 1.96 * se + 1.5, y, f"{bta:.1f}", va="center", fontsize=7)
+a1.set_yticks(ys, [p[0] for p in pts], fontsize=8)
+a1.axvline(0, color="black", lw=0.8)
+a1.set_xlim(-5, 80)
+a1.set_xlabel("Effect on coverage (percentage points)")
+a1.set_title("A. Insurance coverage: robustness", fontsize=9)
+# Panel B: all outcomes in SD units (NFHS-4 neighbour-border SD)
+order = ["oop_real", "log_oop", "inst", "inst_public", "electricity", "women_school10"]
+ys = list(range(len(order)))[::-1]
+for y, o in zip(ys, order):
+    r = main.set_index("outcome").loc[o]
+    col = "#9aa7b8" if r.placebo else "#1f4e79"
+    a2.errorbar(r.beta_std, y, xerr=1.96 * r.se_std, fmt="o", color=col, capsize=3, ms=5)
+a2.set_yticks(ys, [LABELS[o] for o in order], fontsize=8)
+a2.axvline(0, color="black", lw=0.8)
+a2.set_xlabel("Effect in SD units (95% CI)")
+a2.set_title(f"B. Other outcomes (insurance = {r0.beta_std:.1f} SD, off scale)", fontsize=9)
+fig.suptitle("Border-pair DiD, NFHS-4 to NFHS-5 (40 pairs, two-way clustered SEs)", fontsize=10)
+fig.tight_layout()
+fig.savefig(OUT / "fig_coefficients.png", dpi=200)
+
+# ---------------------------------------------------------------- figure: coverage over three rounds (district means)
+nb_d = stack[stack.raj == 0].drop_duplicates("nb_district")
+nb_d = nb_d[nb_d.pair_id.isin(main_pairs)] if (main_pairs := set(pair_did("insur", stack)[1].pair_id)) else nb_d
+raj_d = stack[stack.raj == 1].drop_duplicates("raj_district")
+n6b = n6[n6.border]
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.plot([0, 1, 2], [raj_d.insur_4.mean(), raj_d.insur_5.mean(), n6b.insur_6.mean()], color="#c0504d",
+        marker="o", lw=2.2, label=f"Rajasthan border districts ({len(raj_d)})")
+ax.plot([0, 1], [nb_d.insur_4.mean(), nb_d.insur_5.mean()], color="#1f4e79", marker="o", lw=2.2,
+        label=f"Neighbour border districts ({nb_d.insur_4.notna().sum()})")
+for x, y in zip([0, 1, 2], [raj_d.insur_4.mean(), raj_d.insur_5.mean(), n6b.insur_6.mean()]):
+    ax.text(x, y + 3, f"{y:.1f}", ha="center", fontsize=8, color="#c0504d")
+for x, y in zip([0, 1], [nb_d.insur_4.mean(), nb_d.insur_5.mean()]):
+    ax.text(x, y - 6, f"{y:.1f}", ha="center", fontsize=8, color="#1f4e79")
+ax.text(2, 45, "Neighbours' NFHS-6\nnot available", ha="center", fontsize=7, color="#555")
+ax.set_xticks([0, 1, 2], ["NFHS-4\n2015-16", "NFHS-5\n2019-21", "NFHS-6\n2023-24 (prov.)"])
+ax.set_ylim(0, 100)
+ax.set_ylabel("Households with any member insured (%)")
+ax.set_title("Coverage in border districts: jump, then plateau")
+ax.legend(frameon=False, fontsize=8, loc="center left")
+fig.tight_layout()
+fig.savefig(OUT / "fig_coverage_three_rounds.png", dpi=200)
