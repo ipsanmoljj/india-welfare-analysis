@@ -1,0 +1,8 @@
+NFHS-5 (2019-21) -> NFHS-6 (2023-24), Rajasthan district means
+border         interior (10)  border (23)
+insur_5                 90.0         87.8
+insur_6                 92.0         87.7
+inst_public_5           80.6         78.3
+inst_public_6           75.4         70.6
+private_5               14.1         17.2
+private_6               18.8         24.4

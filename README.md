@@ -49,6 +49,24 @@ imprecisely. This matches Karan, Yip & Mahal (2017), who find RSBY did not
 reduce OOP. Deliveries are a narrow window on financial protection, since
 public-facility deliveries are already near-free under JSY.
 
+## NFHS-6 (2023-24, provisional): Rajasthan only (`code/07_nfhs6_rajasthan.py`)
+
+The uploaded compendium covers Rajasthan's 33 pre-2023 districts, so they line up
+with NFHS-4/5. Our extraction reproduces the earlier NFHS-5 values exactly. It
+has **no out-of-pocket indicator** and **no neighbouring states**, so it cannot
+extend the border DiD. As a persistence check:
+
+| District means | Insured NFHS-5 → 6 | Public-facility births | Private-facility births |
+|---|---|---|---|
+| Border (23) | 87.8 → 87.7 | 78.3 → 70.6 | 17.2 → 24.4 |
+| Interior (10) | 90.0 → 92.0 | 80.6 → 75.4 | 14.1 → 18.8 |
+
+Coverage stayed at its post-BSBY level: the effect persisted, and Chiranjeevi
+(May 2021) added nothing measurable on this indicator because it was already
+near the ceiling. Births shifted from public to private facilities. That is
+consistent with insurance that pays private hospitals, but there is no control
+group for it, so it is descriptive only.
+
 ## Run
 
 ```bash
