@@ -431,28 +431,55 @@ These findings are consistent with Karan, Yip \& Mahal (2017), who report no red
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Cost-effectiveness}
 
-\begin{frame}[t]{Cost-effectiveness}
+\begin{frame}[t]{Cost-effectiveness: approach}
+\small
+The benefits of BSBY cannot be valued in rupees, as the effect on out-of-pocket spending is inconclusive. We therefore report an incremental cost-effectiveness ratio (Dhaliwal et al.\ 2013): the annual public cost per household that became insured because of BSBY.
+\[
+\text{Cost per additionally insured household} \;=\; \frac{c \cdot s \;-\; p_{RSBY} \cdot c_{cf}}{\beta}
+\]
 \scriptsize
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{5.2cm}r>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\toprule
+& \textbf{Definition} & \textbf{Value} & \textbf{Source} \\
+\midrule
+$c$ & Annual cost per covered family (claims paid) & \Rs 297 & SIHFW, pp.\ 2, 19 \\
+$s$ & Share of households covered by BSBY & 0.67 & SIHFW, p.\ 17 \\
+$\beta$ & Increase in coverage caused by BSBY & 0.528 & Border-pair DiD \\
+$p_{RSBY}$ & Counterfactual cost per family under RSBY & 0 & Karan et al., p.\ 84 \\
+\bottomrule
+\end{tabular}
+
+\vspace{5pt}
+$c$: \Rs 295.63 crore of claims over 1.16 years for about 1 crore families, i.e.\ \Rs 254 per family per year (\Rs 297 in 2019--21 prices). Claims understate the premium, so $c$ is a lower bound. $p_{RSBY} = 0$ because RSBY was still being rolled out in Rajasthan in 2016, so the term $p_{RSBY} \cdot c_{cf}$ (with $c_{cf}$ the coverage that would have existed without BSBY) drops out.
+\end{frame}
+
+\begin{frame}[t]{Cost-effectiveness: results}
 \begin{columns}[T]
-\begin{column}{0.55\textwidth}
+\begin{column}{0.56\textwidth}
 \centering
 \includegraphics[width=\textwidth]{fig_cost_effectiveness.png}
 \end{column}
-\begin{column}{0.43\textwidth}
-\[
-\frac{\text{cost/family} \times s_{BSBY} - p_{RSBY}\,c_{cf}}{\beta}
-\]
-\begin{itemize}
-\item Cost/family = \textbf{\Rs 297}/yr: claims paid (\Rs 295.63 cr, 1.16 yrs, 1 crore families), a \emph{floor} on the premium
-\item $s_{BSBY} = 0.67$ (SIHFW p.\ 17)
-\item $p_{RSBY} = 0$ (early rollout, Karan p.\ 84)
-\end{itemize}
+\begin{column}{0.42\textwidth}
+\scriptsize
+\textbf{Cost per additionally insured household (Rs per year)}\\[4pt]
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Value of $\beta$} & \textbf{Cost} \\
+\midrule
+Main (0.528) & \textbf{377} \\
+95\% CI (0.43--0.63) & 317--466 \\
+MP border only (0.45) & 439 \\
+\bottomrule
+\end{tabular}
 \end{column}
 \end{columns}
-\vspace{2pt}
-\begin{block}{Result (incremental cost-effectiveness ratio; Dhaliwal et al.\ 2013)}
-At least \textbf{\Rs 377} per additionally insured household per year (CI of $\beta$: \Rs 317--466; MP-only: \Rs 439), measured against the 2019--21 gap. \textbf{Break-even:} each such household must gain $\ge$ \Rs 377/yr. As neighbours catch up, the cost per unit of \emph{lasting} advantage rises.
-\end{block}
+
+\vspace{6pt}
+\small
+BSBY cost at least \Rs 377 a year for each household that became insured because of the scheme. About 21\% of spending went to households that would have been insured anyway. For the scheme to break even, each additionally insured household must gain at least \Rs 377 a year.
+
+\vspace{3pt}
+\scriptsize The estimate refers to the 2019--21 coverage gap; as neighbouring districts caught up, the cost per unit of lasting advantage rises.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -464,7 +491,7 @@ At least \textbf{\Rs 377} per additionally insured household per year (CI of $\b
 \item \textbf{Coverage:} border estimate (+52.8) and trend-adjusted state estimate (+52.3) agree; by 2023--24 PM-JAY narrowed the gap to $\sim$15 pp, so BSBY's gain was mainly \emph{timing}.
 \item \textbf{Financial protection:} our OOP null agrees with RSBY evidence (Karan et al.) and does not contradict Karnataka's tertiary-care gains (Sood et al.): we measure a margin insurance barely touches, at district resolution.
 \item \textbf{Who benefits:} Dupas \& Jain find women use BSBY less; household coverage cannot see this.
-\item \textbf{Value for money:} $\ge$ \Rs 377 per additionally insured household; $\sim$40\% of spending reaches households that had some insurance anyway.
+\item \textbf{Value for money:} $\ge$ \Rs 377 per additionally insured household; $\sim$21\% of spending reaches households that would have been insured anyway.
 \end{itemize}
 \end{frame}
 

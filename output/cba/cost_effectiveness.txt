@@ -11,5 +11,6 @@ General form (main beta, p_RSBY = 0): cost per additionally insured household = 
 sensitivity: full RSBY premium offset (mixes claims floor with premium)               main (+52.8 pp)   0.5            0.7          560.0                     9.8
 
 MAIN: about Rs 377 per additionally insured household per year (2019-21 Rs), a LOWER BOUND; Rs 317-466 over the 95% CI of beta; Rs 439 with the MP-only beta.
+Share of BSBY spending on households that would have been insured anyway: (s_BSBY - beta) / s_BSBY = (0.67 - 0.528) / 0.67 = 21%.
 BREAK-EVEN (tier 2): an additionally insured household must gain at least about Rs 377 a year.
 Bias directions: claims < premium and launch-year ramp-up -> true cost higher (main is a lower bound); some counterfactual RSBY spending -> slightly lower.

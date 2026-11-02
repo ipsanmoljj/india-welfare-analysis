@@ -603,8 +603,8 @@ only welfare outcome (OOP) is null and underpowered. So we report:
   inequality.
 - **Value for money.**
   - At least ₹377 per additionally insured household per year.
-  - About 40% of spending reaches households that would have had some insurance
-    anyway. That's the cost of reaching the rest under a universal-entitlement
+  - About 21% of spending reaches households that would have been insured
+    anyway: (0.67 − 0.528) / 0.67. That's the cost of reaching the rest under a universal-entitlement
     design.
 
 ---
@@ -661,7 +661,7 @@ only welfare outcome (OOP) is null and underpowered. So we report:
 
 ## 15. Suggested slide structure
 
-The Beamer deck (`presentation/main.tex`, IIT Roorkee template, 26 slides) follows this order:
+The Beamer deck (`presentation/main.tex`, IIT Roorkee template, 27 slides) follows this order:
 
 | # | Slide | Visual |
 |---|---|---|
@@ -685,12 +685,13 @@ The Beamer deck (`presentation/main.tex`, IIT Roorkee template, 26 slides) follo
 | 18 | All outcomes | — |
 | 19 | Robustness at a glance | **Figure 4** (coefficients) |
 | 20 | Out-of-pocket spending | — |
-| 21 | Cost-effectiveness | **Figure 5** (cost) |
-| 22 | Discussion | — |
-| 23 | Conclusions | — |
-| 24 | Limitations and future work | — |
-| 25 | References | — |
-| 26 | Thank you | — |
+| 21 | Cost-effectiveness: approach | — |
+| 22 | Cost-effectiveness: results | **Figure 5** (cost) |
+| 23 | Discussion | — |
+| 24 | Conclusions | — |
+| 25 | Limitations and future work | — |
+| 26 | References | — |
+| 27 | Thank you | — |
 
 **Likely questions** (answers in `docs/presentation_guide.md`, section 12): why
 not an RDD; the baseline after launch; parallel trends; whether the comparison

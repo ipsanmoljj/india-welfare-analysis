@@ -111,6 +111,8 @@ lines = [
     f"Rs {cer(cost_pf, s_bsby, 0, BETAS['95% CI high']):,.0f}-{cer(cost_pf, s_bsby, 0, BETAS['95% CI low']):,.0f} "
     f"over the 95% CI of beta; Rs {cer(cost_pf, s_bsby, 0, BETAS['MP border only (conservative)']):,.0f} "
     "with the MP-only beta.",
+    f"Share of BSBY spending on households that would have been insured anyway: (s_BSBY - beta) / s_BSBY = "
+    f"({s_bsby:.2f} - {B0:.3f}) / {s_bsby:.2f} = {(s_bsby - B0) / s_bsby:.0%}.",
     f"BREAK-EVEN (tier 2): an additionally insured household must gain at least about Rs {main_cer:,.0f} a year.",
     "Bias directions: claims < premium and launch-year ramp-up -> true cost higher (main is a lower bound); "
     "some counterfactual RSBY spending -> slightly lower.",
