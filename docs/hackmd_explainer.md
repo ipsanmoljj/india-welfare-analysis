@@ -681,7 +681,7 @@ The Beamer deck (`presentation/main.tex`, IIT Roorkee template, 26 slides) follo
 | 14 | Empirical strategy | — |
 | 15 | Pre-trends: state event study | **Figure 2** (event study) |
 | 16 | Main result: coverage | **Figure 3** (three rounds) |
-| 17 | Did the lead last? NFHS-6 (2023–24) | — |
+| 17 | Did Rajasthan's lead last? | — |
 | 18 | All outcomes | — |
 | 19 | Robustness at a glance | **Figure 4** (coefficients) |
 | 20 | Why no effect on OOP? | — |
