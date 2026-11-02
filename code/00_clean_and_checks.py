@@ -17,6 +17,7 @@ Outputs:
   data/clean/insurance_district_clean.csv   one row per comparable district
   data/clean/state_insurance_clean.csv      NFHS-3/4/5 state panel (event study)
   data/clean/nfhs6_rajasthan_districts.csv  validated NFHS-6 Rajasthan extract
+  data/clean/nfhs6_border_districts.csv     validated NFHS-6 values for all border districts
   output/checks/data_audit.md               pass/fail log of every check
   output/checks/audit_status.txt            PASS only if every check passes;
                                             analysis scripts refuse to run otherwise
@@ -253,6 +254,66 @@ check("Standardisation reference = NFHS-4 neighbour border districts", True,
       "; ".join(f"{v}: mean {m:,.1f}, SD {s:,.1f}" for v, (m, s) in z_ref.items()))
 
 w.drop(columns=["key"]).to_csv(CLEAN / "insurance_district_clean.csv", index=False)
+
+# ---------------------------------------------------------------- 4b. NFHS-6 for the border sample
+# Source: Patra (2026), independent CSV compilation of the IIPS NFHS-6 State/District
+# Fact Sheets (github.com/nabinpatra007/nfhs6-district-data-india, commit 048fbf2,
+# file data/all_india_nfhs6_district.csv). Provisional. Validated here against our own
+# extraction of the official Rajasthan compendium and against our cleaned NFHS-5 data.
+N6_VARS = {
+    "insur": "Households with any usual member covered under a health insurance/financing scheme (%)",
+    "inst": "Institutional births (%)",
+    "inst_public": "Institutional births in public facility (%)",
+    "electricity": "Population living in households with electricity (%)",
+    "women_school10": "Women with 10 or more years of schooling (%)",
+}
+N6_ALIAS = {"Muktsar": "Sri Muktsar Sahib", "Mewat": "Nuh", "Dhaulpur": "Dholpur",
+            "Jalor": "Jalore", "Chittaurgarh": "Chittorgarh"}
+# Documented exception: the NFHS-6 compendium reprints NFHS-5 insurance for these Gujarat
+# districts 4.5-5 pp above the original NFHS-5 fact sheet (all other indicators match).
+# Rule: 5->6 changes use the compendium's own NFHS-5 value; 4->6 insurance excludes them.
+N6_EXCEPTIONS = {("Gujarat", "Kachchh", "insur"), ("Gujarat", "Banaskantha", "insur"),
+                 ("Gujarat", "Dahod", "insur")}
+n6a = pd.read_csv(RAW / "nfhs6_all_india_district_patra.csv", low_memory=False)
+n6a["k"] = n6a["state"].map(norm).str[:6] + n6a["district"].map(norm)
+pairs_all = pd.read_csv(CLEAN / "border_pairs.csv")
+bkeys = set(zip(pairs_all.raj_st, pairs_all.raj_dt)) | set(zip(pairs_all.nb_st, pairs_all.nb_dt))
+bd = w[[k in bkeys for k in zip(w.ST_CEN_CD, w.dt)]].dropna(subset=["insur_4", "insur_5"]).copy()
+bd["k"] = bd["State"].map(norm).str[:6] + bd["District"].replace(N6_ALIAS).map(norm)
+n6_out = bd[["ST_CEN_CD", "dt", "State", "District"]].copy()
+unmatched, disagree, flagged, bad_range = set(), [], 0, 0
+for v, ind in N6_VARS.items():
+    sv = n6a[n6a["indicator"] == ind].drop_duplicates("k").set_index("k")
+    v6 = pd.to_numeric(bd["k"].map(sv["nfhs6_value"]), errors="coerce").replace(0, np.nan)
+    v5c = pd.to_numeric(bd["k"].map(sv["nfhs5_value"]), errors="coerce")
+    unmatched |= set(bd.loc[v6.isna(), "District"])
+    flagged += int(bd["k"].map(sv["small_sample_flag"]).astype(str).eq("True").sum()
+                   + bd["k"].map(sv["boundary_change_single_round"]).astype(str).eq("True").sum())
+    bad_range += int(((v6 < 0) | (v6 > 100)).sum())
+    for (st, dn), x5, y5 in zip(zip(bd.State, bd.District), bd[f"{v}_5"], v5c):
+        if pd.notna(y5) and abs(x5 - y5) >= 0.05:
+            disagree.append((st, dn, v))
+    n6_out[f"{v}_6"] = v6.values
+    n6_out[f"{v}_5_n6"] = v5c.values  # NFHS-5 as printed in the NFHS-6 compendium
+check("NFHS-6 border: all border districts matched by name (with 5 documented spellings)", not unmatched,
+      f"{len(bd)} districts; unmatched: {sorted(unmatched)}")
+check("NFHS-6 border: no small-sample or boundary-change flags", flagged == 0, f"{flagged} flags")
+check("NFHS-6 border: values in [0, 100]", bad_range == 0, f"{bad_range} violations")
+check("NFHS-6 border: logic, public <= institutional births",
+      (n6_out["inst_public_6"] <= n6_out["inst_6"] + 0.5).all(), "")
+undocumented = sorted(set(disagree) - N6_EXCEPTIONS)
+check("NFHS-6 border: compendium's NFHS-5 equals our cleaned NFHS-5 (except documented)",
+      not undocumented,
+      f"{len(disagree)} disagreements, all documented (Gujarat insurance: Kachchh, Banaskantha, Dahod); "
+      f"undocumented: {undocumented}")
+r6 = n6a[(n6a["indicator"] == N6_VARS["insur"]) & n6a["state"].str.contains("Rajasthan")]
+r6 = r6.assign(k=r6["district"].map(norm)).set_index("k")
+ours6 = pd.read_csv(ROOT / "data" / "interim" / "nfhs6_rajasthan_extracted.csv")
+d6 = (ours6["district"].map(norm).map(r6["nfhs6_value"]).astype(float) - ours6["insur_6"]).abs()
+check("NFHS-6: compilation equals our extraction of the official Rajasthan compendium",
+      d6.notna().all() and d6.max() < 0.05, f"{int(d6.notna().sum())}/33 districts, max |diff| {d6.max():.2f}")
+n6_out["gujarat_insur_exception"] = [(st, dn, "insur") in N6_EXCEPTIONS for st, dn in zip(n6_out.State, n6_out.District)]
+n6_out.to_csv(CLEAN / "nfhs6_border_districts.csv", index=False)
 
 # ---------------------------------------------------------------- 5. cost-effectiveness inputs
 # Kept separate from the main audit: missing CBA inputs block only the CBA,

@@ -228,25 +228,54 @@ fig.suptitle("Border-pair DiD, NFHS-4 to NFHS-5 (40 pairs, two-way clustered SEs
 fig.tight_layout()
 fig.savefig(OUT / "fig_coefficients.png", dpi=200)
 
+# ---------------------------------------------------------------- NFHS-6 extension (border sample)
+# Cleaned NFHS-6 values for all border districts (00_clean_and_checks.py, section 4b).
+# 5->6 changes use the NFHS-5 value printed in the NFHS-6 compendium (same source both
+# rounds); 4->6 insurance changes exclude the 3 Gujarat districts whose NFHS-5 insurance
+# the compendium revises (documented exception).
+n6b_all = pd.read_csv(ROOT / "data" / "clean" / "nfhs6_border_districts.csv")
+N6V = ["insur", "inst", "inst_public", "electricity", "women_school10"]
+s6 = stack.drop(columns=[c for c in stack.columns if c.endswith("_6") or c.endswith("_n6")], errors="ignore") \
+    .merge(n6b_all.drop(columns=["State", "District"]), on=["ST_CEN_CD", "dt"], how="left")
+for v in N6V:
+    s6[f"d_{v}_56"] = s6[f"{v}_6"] - s6[f"{v}_5_n6"]
+    s6[f"d_{v}_46"] = s6[f"{v}_6"] - s6[f"{v}_4"]
+s6.loc[s6["gujarat_insur_exception"].fillna(False).astype(bool), "d_insur_46"] = np.nan
+rows6 = []
+for label, data in {"all borders": s6, "drop Gujarat": s6[s6.nb_state != "Gujarat"]}.items():
+    for v in N6V:
+        for span, lab in [("56", "NFHS-5 -> NFHS-6 (2019-21 -> 2023-24)"), ("46", "NFHS-4 -> NFHS-6 (long difference)")]:
+            m, sub = pair_did(f"{v}_{span}", data)
+            b, se, pv = est(m)
+            rows6.append(dict(sample=label, outcome=v, placebo=v in PLACEBOS, change=lab, beta=b, se=se, p=pv,
+                              pairs=sub.pair_id.nunique()))
+res6 = pd.DataFrame(rows6)
+res6.to_csv(OUT / "border_pair_did_nfhs6.csv", index=False)
+print("\nNFHS-6 EXTENSION (border-pair DiD, two-way clustered SEs)")
+print(res6.round(3).to_string(index=False))
+
 # ---------------------------------------------------------------- figure: coverage over three rounds (district means)
-nb_d = stack[stack.raj == 0].drop_duplicates("nb_district")
-nb_d = nb_d[nb_d.pair_id.isin(main_pairs)] if (main_pairs := set(pair_did("insur", stack)[1].pair_id)) else nb_d
+main_pairs = set(pair_did("insur", stack)[1].pair_id)
+nb_d = stack[(stack.raj == 0) & stack.pair_id.isin(main_pairs)].drop_duplicates("nb_district")
 raj_d = stack[stack.raj == 1].drop_duplicates("raj_district")
 n6b = n6[n6.border]
+nb6 = n6b_all.merge(nb_d[["ST_CEN_CD", "dt"]], on=["ST_CEN_CD", "dt"])
+raj_y = [raj_d.insur_4.mean(), raj_d.insur_5.mean(), n6b.insur_6.mean()]
+nb_y = [nb_d.insur_4.mean(), nb_d.insur_5.mean(), nb6.insur_6.mean()]
 fig, ax = plt.subplots(figsize=(6, 4))
-ax.plot([0, 1, 2], [raj_d.insur_4.mean(), raj_d.insur_5.mean(), n6b.insur_6.mean()], color="#c0504d",
-        marker="o", lw=2.2, label=f"Rajasthan border districts ({len(raj_d)})")
-ax.plot([0, 1], [nb_d.insur_4.mean(), nb_d.insur_5.mean()], color="#1f4e79", marker="o", lw=2.2,
+ax.plot([0, 1, 2], raj_y, color="#c0504d", marker="o", lw=2.2, label=f"Rajasthan border districts ({len(raj_d)})")
+ax.plot([0, 1, 2], nb_y, color="#1f4e79", marker="o", lw=2.2,
         label=f"Neighbour border districts ({nb_d.insur_4.notna().sum()})")
-for x, y in zip([0, 1, 2], [raj_d.insur_4.mean(), raj_d.insur_5.mean(), n6b.insur_6.mean()]):
+for x, y in zip([0, 1, 2], raj_y):
     ax.text(x, y + 3, f"{y:.1f}", ha="center", fontsize=8, color="#c0504d")
-for x, y in zip([0, 1], [nb_d.insur_4.mean(), nb_d.insur_5.mean()]):
+for x, y in zip([0, 1, 2], nb_y):
     ax.text(x, y - 6, f"{y:.1f}", ha="center", fontsize=8, color="#1f4e79")
-ax.text(2, 45, "Neighbours' NFHS-6\nnot available", ha="center", fontsize=7, color="#555")
 ax.set_xticks([0, 1, 2], ["NFHS-4\n2015-16", "NFHS-5\n2019-21", "NFHS-6\n2023-24 (prov.)"])
 ax.set_ylim(0, 100)
 ax.set_ylabel("Households with any member insured (%)")
-ax.set_title("Coverage in border districts: jump, then plateau")
+ax.set_title("Coverage in border districts over three rounds")
 ax.legend(frameon=False, fontsize=8, loc="center left")
-fig.tight_layout()
+fig.text(0.01, 0.01, "NFHS-6 is provisional (IIPS fact sheets via Patra 2026 compilation). For 3 Gujarat districts the "
+         "NFHS-6 compendium revises NFHS-5 insurance up ~5 pp.", fontsize=5.5, color="#555")
+fig.tight_layout(rect=(0, 0.03, 1, 1))
 fig.savefig(OUT / "fig_coverage_three_rounds.png", dpi=200)

@@ -112,23 +112,37 @@ premium. **Break-even:** each additionally insured household must gain at least 
 
 ![Cost-effectiveness](output/cba/fig_cost_effectiveness.png)
 
-## NFHS-6 (2023-24, provisional): Rajasthan only (`code/07_nfhs6_rajasthan.py`)
+## NFHS-6 (2023-24, provisional): the neighbours caught up
 
-The uploaded compendium covers Rajasthan's 33 pre-2023 districts, so they line up
-with NFHS-4/5. Our extraction reproduces the earlier NFHS-5 values exactly. It
-has **no out-of-pocket indicator** and **no neighbouring states**, so it cannot
-extend the border DiD. As a persistence check:
+NFHS-6 district data for **all** border districts comes from Patra (2026), an
+independent CSV compilation of the IIPS fact sheets. It passes the cleaning checks:
+- **Rajasthan:** equal to our own extraction of the official Rajasthan compendium
+  (33/33 districts).
+- **All 44 border districts:** matched, with no small-sample or boundary flags.
+- **NFHS-5 values:** the compendium's NFHS-5 column equals our cleaned NFHS-5,
+  except Gujarat insurance in 3 districts, which the compendium revises up about
+  5 pp. This is a documented exception: those districts are excluded from 4→6
+  insurance changes.
 
-| District means | Insured NFHS-5 → 6 | Public-facility births | Private-facility births |
+| Change in the Rajasthan − neighbour gap | β (SE) | p | Pairs |
 |---|---|---|---|
-| Border (23) | 87.8 → 87.7 | 78.3 → 70.6 | 17.2 → 24.4 |
-| Interior (10) | 90.0 → 92.0 | 80.6 → 75.4 | 14.1 → 18.8 |
+| NFHS-4 → NFHS-5 (main result) | +52.8 (5.1) | <0.001 | 40 |
+| **NFHS-5 → NFHS-6** (2019-21 → 2023-24) | **−32.9 (4.7)** | <0.001 | 40 |
+| **NFHS-4 → NFHS-6** (long difference; Gujarat insurance excluded) | **+15.0 (6.8)** | 0.026 | 35 |
 
-Coverage stayed at its post-BSBY level: the effect persisted, and Chiranjeevi
-(May 2021) added nothing measurable on this indicator because it was already
-near the ceiling. Births shifted from public to private facilities. That is
-consistent with insurance that pays private hospitals, but there is no control
-group for it, so it is descriptive only.
+**Rajasthan reached near-universal coverage first, and the neighbours then caught
+up under PM-JAY.** Border-district means: Rajasthan 17.2 → 87.8 → 87.7%;
+neighbours 13.0 → 31.0 → 64.1%. By 2023-24 Rajasthan's lead is about 15 points,
+not 53.
+
+Placebos are flat from NFHS-5 to NFHS-6. Over the long difference, the women's
+schooling placebo is significant (+3.6 pp, p = 0.04; p = 0.11 without Gujarat).
+That is a mild sign of faster general development in Rajasthan's border districts.
+Results: `output/insurance/border_pair_did_nfhs6.csv`. NFHS-6 has no OOP indicator.
+
+**Within Rajasthan (descriptive):** births moved from public to private facilities
+(border districts: private 17.2 → 24.4%). That fits insurance paying private
+hospitals, but there's no comparison group.
 
 ## Run
 

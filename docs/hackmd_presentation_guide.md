@@ -24,10 +24,10 @@ to where each number is produced.
 | **Question** | Did Rajasthan's Bhamashah Swasthya Bima Yojana (BSBY, Dec 2015) raise health insurance coverage and reduce out-of-pocket (OOP) spending, relative to districts just across the state border that had only the national schemes? |
 | **Data** | NFHS-3 (2005-06), NFHS-4 (2015-16), NFHS-5 (2019-21) factsheets; NFHS-6 (2023-24, provisional) for Rajasthan; Census 2011 district map |
 | **Design** | Contiguous border-pair DiD (Dube, Lester & Reich 2010): 23 Rajasthan × 26 neighbour districts, 40 usable pairs; plus a three-round state event study for pre-trends |
-| **Main result** | Coverage rose **52.8 percentage points** more in Rajasthan border districts (SE 5.1, p < 0.001); robust in every check (+45 to +55) |
+| **Main result** | Coverage rose **52.8 percentage points** more in Rajasthan border districts by 2019–21 (SE 5.1, p < 0.001); robust in every check (+45 to +55). By 2023–24 the neighbours caught up to within **15 pp** (NFHS-6) |
 | **Welfare result** | **No detectable change in OOP per delivery.** The design is underpowered for it: the 95% CI (−₹2,003 to +₹1,291) is wider than the baseline (₹2,235) |
 | **Cost** | At least about **₹377 per additionally insured household per year** (cost-effectiveness, using official claims paid as a floor on cost) |
-| **One-line takeaway** | The scheme reached people at scale, but this data can't show it reduced what they paid. |
+| **One-line takeaway** | BSBY brought near-universal coverage years before the neighbours got there, but this data can't show it reduced what people paid. |
 
 ---
 
@@ -285,17 +285,26 @@ All p < 0.001. No other outcome is significant in any sample.
    improving slightly faster on general development. It's small next to the
    coverage effect (0.24 SD vs 7.3 SD).
 
-### 8.4 Persistence (NFHS-6, descriptive)
+### 8.4 The third round (NFHS-6): the neighbours caught up
 
-| Rajasthan district means | NFHS-5 | NFHS-6 |
+| Change in the Rajasthan − neighbour gap (border pairs) | β (SE) | p |
 |---|---|---|
-| Insured, border (23) | 87.8 | 87.7 |
-| Insured, interior (10) | 90.0 | 92.0 |
-| Public-facility births, border | 78.3 | 70.6 |
-| Private-facility births, border | 17.2 | 24.4 |
+| NFHS-4 → NFHS-5 (main) | +52.8 (5.1) | <0.001 |
+| **NFHS-5 → NFHS-6** | **−32.9 (4.7)** | <0.001 |
+| **NFHS-4 → NFHS-6** (long difference, Gujarat insurance excluded) | **+15.0 (6.8)** | 0.026 |
 
-- **Coverage held:** the effect didn't fade. Chiranjeevi (2021) added nothing
-  measurable because coverage was already at about 88% (ceiling).
+- **Coverage means:** Rajasthan border 17.2 → 87.8 → 87.7%; neighbours
+  13.0 → 31.0 → **64.1%**.
+- **How to say it:** "Rajasthan's coverage held, but the neighbours caught up
+  under PM-JAY. BSBY's effect is mostly about getting there years earlier."
+- **Data:** an independent compilation of the IIPS NFHS-6 fact sheets (Patra
+  2026), validated against our extraction of the official Rajasthan PDF (33/33
+  exact). The compendium revises NFHS-5 insurance for 3 Gujarat districts by about
+  +5 pp (documented exception).
+- **Placebos:** flat from 5 to 6. The long-difference women's-schooling placebo is
+  significant (+3.6, p = 0.04; p = 0.11 without Gujarat). Report it.
+- **Chiranjeevi (2021)** added nothing measurable in Rajasthan, because coverage
+  was already at about 88%.
 - **Births moved toward private facilities.** That fits insurance paying private
   hospitals, but there's **no comparison group**, so it's descriptive only.
 
@@ -328,9 +337,10 @@ All p < 0.001. No other outcome is significant in any sample.
 
 ![fig_coverage_three_rounds.png](https://raw.githubusercontent.com/ipsanmoljj/india-welfare-analysis/main/output/insurance/fig_coverage_three_rounds.png)
 - **Shows:** district means. Rajasthan border districts go 17.2 → 87.8 → 87.7;
-  neighbour border districts go 13.0 → 31.0 (their NFHS-6 isn't available).
+  neighbour border districts go 13.0 → 31.0 → 64.1.
 - **Say:** "The raw DiD is visible by eye: 70.6 vs 18.0 points, a gap of 52.6,
-  which the regression reproduces. The effect then plateaus."
+  which the regression reproduces. By 2023–24 the neighbours closed most of the
+  gap: Rajasthan got there first."
 - **Note:** the regression's baseline mean (15.1) differs slightly from 17.2,
   because in the regression districts appear once per pair they belong to.
 
@@ -360,11 +370,12 @@ All p < 0.001. No other outcome is significant in any sample.
 7. **Cost is a floor:** the BSBY premium isn't public, so cost uses official claims paid per
    family (section 12b): ₹377 per additionally insured household is a lower bound. Benefits are not monetised (OOP null), so this is cost-effectiveness plus
    break-even, not a full CBA.
-8. **NFHS-6 is provisional** and Rajasthan-only.
+8. **NFHS-6 is provisional;** the neighbours' values come from an independent
+   compilation (validated against the official Rajasthan PDF).
 
 **Future work:** NSS 71st vs 75th rounds for OOP per hospitalisation; NFHS
-GPS-cluster data for a spatial RDD (Dell 2010; Sood et al. 2014); neighbours'
-NFHS-6 for a three-round border event study.
+GPS-cluster data for a spatial RDD (Dell 2010; Sood et al. 2014); linking the
+neighbours' catch-up to PM-JAY rollout.
 
 ---
 
@@ -431,10 +442,15 @@ A: Each district appears in several pairs, so its errors repeat. Clustering on
 both the Rajasthan and the neighbour district handles that. Dube et al. cluster
 by state and border segment, but 6 states / 5 segments are too few clusters.
 
+**Q: Did the effect last?**
+A: Rajasthan's coverage did (87.8% → 87.7%), but its lead didn't. NFHS-6 shows the
+neighbours rising from 31% to 64% under PM-JAY, so the gap fell from +52.8 to
+about +15 pp (p = 0.03). BSBY's main achievement was getting there years earlier.
+
 **Q: What would you do with more time?**
 A: (1) NSS health rounds for OOP per hospitalisation. (2) NFHS GPS clusters for a
 spatial RDD. (3) The actual BSBY premium, to replace the claims-paid floor.
-(4) Neighbours' NFHS-6.
+(4) Link the neighbours' NFHS-6 catch-up to PM-JAY rollout.
 
 ---
 

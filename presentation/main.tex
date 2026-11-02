@@ -166,7 +166,7 @@ Jan--Jul 2016 & NFHS-4 in Rajasthan \\
 2018 & PM-JAY nationally \\
 2019 & BSBY $\rightarrow$ AB-MGRSBY \\
 2019--21 & NFHS-5 (post) \\
-2023--24 & NFHS-6 (persistence) \\
+2023--24 & NFHS-6 (third round) \\
 \bottomrule
 \end{tabular}
 \end{column}
@@ -199,7 +199,7 @@ Did BSBY raise health insurance coverage and reduce out-of-pocket spending, rela
 \midrule
 NFHS-4 (2015--16), NFHS-5 (2019--21) district factsheets & Main analysis (one value per district) \\
 NFHS-3/4/5 state factsheets & Pre-trend event study \\
-NFHS-6 (2023--24) Rajasthan, provisional & Persistence; cross-check \\
+NFHS-6 (2023--24), all border districts, provisional & Third round; cross-checks \\
 Census 2011 district map & Finding border pairs \\
 SIHFW BSBY presentation & Claims, eligibility (cost) \\
 \bottomrule
@@ -305,10 +305,30 @@ For district $i$ in contiguous pair $p$:
 \item Neighbours: 13.0 $\rightarrow$ 31.0\%
 \item Raw DiD: 70.6 $-$ 18.0 = 52.6
 \item \hl{Regression: $\beta$ = +52.8 pp (SE 5.1), p $<$ 0.001}
-\item Effect persists to 2023--24
+\item Neighbours reach 64.1\% by 2023--24 (next slide)
 \end{itemize}
 \end{column}
 \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Did the lead last? NFHS-6 (2023--24)}
+\small
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Change in Rajasthan $-$ neighbour gap} & $\boldsymbol{\beta}$ \textbf{(SE)} & \textbf{p} \\
+\midrule
+NFHS-4 $\rightarrow$ NFHS-5 (main) & +52.8 (5.1) & $<$0.001 \\
+\textbf{NFHS-5 $\rightarrow$ NFHS-6} & \textbf{$-$32.9 (4.7)} & $<$0.001 \\
+\textbf{NFHS-4 $\rightarrow$ NFHS-6} (long difference) & \textbf{+15.0 (6.8)} & 0.026 \\
+\bottomrule
+\end{tabular}
+\vspace{6pt}
+\begin{itemize}
+\item Rajasthan border: 87.8 $\rightarrow$ 87.7\%; neighbours: 31.0 $\rightarrow$ \textbf{64.1\%} (PM-JAY)
+\item \hl{BSBY's effect is mainly timing:} near-universal coverage years earlier
+\item Placebos flat 5$\rightarrow$6; long-difference schooling placebo +3.6 (p = 0.04)
+\end{itemize}
+\scriptsize NFHS-6 provisional: IIPS fact sheets via Patra (2026) compilation, validated 33/33 against the official Rajasthan PDF; Gujarat insurance revised in the compendium (excluded from 4$\rightarrow$6).
 \end{frame}
 
 \begin{frame}[t]{All outcomes}
@@ -390,7 +410,7 @@ At least \textbf{\Rs 377} per additionally insured household per year (CI of $\b
 \begin{frame}[t]{Discussion}
 \small
 \begin{itemize}
-\item \textbf{Coverage:} 88\% in Rajasthan vs 16--39\% in neighbours; border estimate (+52.8) and trend-adjusted state estimate (+52.3) agree.
+\item \textbf{Coverage:} border estimate (+52.8) and trend-adjusted state estimate (+52.3) agree; by 2023--24 PM-JAY narrowed the gap to $\sim$15 pp, so BSBY's gain was mainly \emph{timing}.
 \item \textbf{Financial protection:} our OOP null agrees with RSBY evidence (Karan et al.) and does not contradict Karnataka's tertiary-care gains (Sood et al.): we measure a margin insurance barely touches, at district resolution.
 \item \textbf{Who benefits:} Dupas \& Jain find women use BSBY less; household coverage cannot see this.
 \item \textbf{Value for money:} $\ge$ \Rs 377 per additionally insured household; $\sim$40\% of spending reaches households that had some insurance anyway.
@@ -399,7 +419,7 @@ At least \textbf{\Rs 377} per additionally insured household per year (CI of $\b
 
 \begin{frame}[t]{Conclusions}
 \begin{enumerate}
-\item \textbf{BSBY worked as a coverage policy:} +53 pp relative to the border, robust to every check, persistent to 2023--24.
+\item \textbf{BSBY worked as a coverage policy, and worked early:} +53 pp relative to the border by 2019--21, robust to every check; neighbours caught up to within 15 pp by 2023--24.
 \item \textbf{Financial protection is unproven, not disproven:} OOP per delivery is the wrong margin and the design is underpowered for it.
 \item \textbf{Cost:} at least \Rs 377 per additionally insured household per year; benefits must exceed this to justify it.
 \item \textbf{Policy:} state schemes can reach near-universal coverage quickly; evaluations should measure hospitalisation spending and health, not just enrolment.
@@ -425,7 +445,7 @@ At least \textbf{\Rs 377} per additionally insured household per year (CI of $\b
 \begin{itemize}
 \item NSS 71st vs 75th: OOP per hospitalisation
 \item NFHS GPS clusters: spatial RD (Dell 2010; Sood et al.\ 2014)
-\item Neighbours' NFHS-6: three-round border panel
+\item Link neighbours' catch-up to PM-JAY rollout
 \item Actual premium $\Rightarrow$ MVPF / value of risk protection
 \end{itemize}
 \end{column}
@@ -448,6 +468,7 @@ At least \textbf{\Rs 377} per additionally insured household per year (CI of $\b
 \item Finkelstein, A., \& McKnight, R. (2008). What did Medicare do? \emph{Journal of Public Economics}, 92(7), 1644--1668.
 \item Hendren, N., \& Sprung-Keyser, B. (2020). A unified welfare analysis of government policies. \emph{QJE}, 135(3), 1209--1318.
 \item IIPS. National Family Health Survey (NFHS-3, 4, 5) fact sheets; NFHS-6 Rajasthan compendium (provisional, 2026).
+\item Patra, N. K. (2026). NFHS-6 provisional district-level data (India): independent compilation. GitHub.
 \item Karan, A., Yip, W., \& Mahal, A. (2017). Extending health insurance to the poor in India: RSBY and out of pocket spending. \emph{Social Science \& Medicine}, 181, 83--92.
 \item Kling, J. R., Liebman, J. B., \& Katz, L. F. (2007). Experimental analysis of neighborhood effects. \emph{Econometrica}, 75(1), 83--119.
 \item SIHFW Rajasthan. \emph{Bhamashah Swasthya Bima Yojana} (presentation). Jaipur.

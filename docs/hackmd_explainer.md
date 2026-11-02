@@ -46,10 +46,10 @@ runs only on cleaned data and stops unless the data audit passes. Repository:
 | **Question** | Did BSBY raise health insurance coverage and reduce out-of-pocket (OOP) health spending, compared with districts just across the state border that had only the national schemes? |
 | **Data** | National Family Health Survey (NFHS) rounds 3, 4, 5 and 6; Census 2011 district map; official BSBY claims data |
 | **Method** | Contiguous border-pair difference-in-differences (40 pairs of districts touching across the Rajasthan border), plus a three-round state event study to test pre-trends |
-| **Main finding** | Insurance coverage rose **52.8 percentage points** more in Rajasthan's border districts than across the border (p < 0.001), robust to every check |
+| **Main finding** | Insurance coverage rose **52.8 percentage points** more in Rajasthan's border districts than across the border by 2019–21 (p < 0.001), robust to every check. By 2023–24 the neighbours had partly caught up, and the gap was **+15 pp** |
 | **Welfare finding** | **No detectable change in OOP spending per delivery.** The design is underpowered for this outcome, so this is not evidence of no effect |
 | **Cost** | At least about **₹377 per additionally insured household per year** (cost-effectiveness, lower bound) |
-| **Takeaway** | The scheme reached people at scale; this data cannot show that it reduced what they paid |
+| **Takeaway** | BSBY brought near-universal coverage to Rajasthan years before its neighbours; this data cannot show that it reduced what they paid |
 
 ---
 
@@ -302,7 +302,7 @@ From the official SIHFW Rajasthan presentation (`data/raw/BSBY_SIHFW_presentatio
 | 2019 | BSBY merged with Ayushman Bharat (AB-MGRSBY) | Treatment continues |
 | 2019–21 | NFHS-5 | Post-period |
 | May 2021 | Chiranjeevi scheme (near-universal) in Rajasthan | After NFHS-5 Rajasthan fieldwork |
-| May 2023 – Jan 2024 | NFHS-6 fieldwork in Rajasthan | Persistence check |
+| 2023–24 | NFHS-6 (all states; Rajasthan May 2023 – Jan 2024) | Third round: did the neighbours catch up? |
 
 ---
 
@@ -313,7 +313,7 @@ From the official SIHFW Rajasthan presentation (`data/raw/BSBY_SIHFW_presentatio
 | NFHS-4 (2015–16) and NFHS-5 (2019–21) district factsheets (IIPS) | One value per district per indicator, 641 districts | Main analysis |
 | A second copy of the same factsheets (phase-1 states) | Same values, plus small-sample flags | Cross-checking |
 | NFHS-3/4/5 state factsheets | State values back to 2005–06 | Pre-trend event study |
-| NFHS-6 (2023–24) Rajasthan compendium, provisional | 33 districts, NFHS-6 next to NFHS-5 | Persistence and cross-check |
+| NFHS-6 (2023–24) Rajasthan compendium (official PDF) and all-state compilation (Patra 2026), provisional | NFHS-6 next to NFHS-5, all border districts | Third round; cross-checks |
 | Census 2011 district map | District boundaries | Finding border pairs |
 | SIHFW BSBY presentation | Claims, eligibility, coverage share | Cost |
 
@@ -477,12 +477,30 @@ in any sample.
 
 ![State event study](https://raw.githubusercontent.com/ipsanmoljj/india-welfare-analysis/main/output/insurance/fig_state_event_study.png)
 
-### 10.3 Raw means and persistence (NFHS-6)
+### 10.3 The third round (NFHS-6): the neighbours caught up
 
 - **Rajasthan border districts:** 17.2% → 87.8% → 87.7% (NFHS-4 → NFHS-5 → NFHS-6).
-- **Neighbouring border districts:** 13.0% → 31.0%.
-- **Raw DiD:** 70.6 − 18.0 = **52.6**, which the regression reproduces (52.8).
-- **Persistence:** coverage held through 2023–24.
+- **Neighbouring border districts:** 13.0% → 31.0% → **64.1%**.
+- **Raw DiD, NFHS-4 → NFHS-5:** 70.6 − 18.0 = **52.6**, which the regression
+  reproduces (52.8).
+
+| Change in the Rajasthan − neighbour gap | β (SE) | p | Pairs |
+|---|---|---|---|
+| NFHS-4 → NFHS-5 (main result) | +52.8 (5.1) | <0.001 | 40 |
+| **NFHS-5 → NFHS-6** (2019-21 → 2023-24) | **−32.9 (4.7)** | <0.001 | 40 |
+| **NFHS-4 → NFHS-6** (long difference; Gujarat insurance excluded) | **+15.0 (6.8)** | 0.026 | 35 |
+
+- **Rajasthan's level held, but its lead shrank** as PM-JAY expanded coverage
+  across the border. BSBY's effect is best read as **getting Rajasthan to
+  near-universal coverage years earlier**, not a permanent gap.
+- **Data:** NFHS-6 for all border districts comes from an independent compilation
+  of the IIPS fact sheets (Patra 2026). It matches our extraction of the official
+  Rajasthan compendium exactly. The compendium revises NFHS-5 insurance for 3
+  Gujarat districts by about +5 pp (documented; those districts are excluded from
+  the 4→6 insurance change).
+- **Placebos:** flat from NFHS-5 to NFHS-6. The long-difference women's-schooling
+  placebo is significant (+3.6 pp, p = 0.04; p = 0.11 without Gujarat), a mild
+  warning about faster general development in Rajasthan.
 - **Births shifted toward private facilities:** in border districts, 17.2% →
   24.4% between NFHS-5 and NFHS-6. That fits insurance paying private hospitals,
   but there's no comparison group, so it's descriptive only.
@@ -569,6 +587,10 @@ only welfare outcome (OOP) is null and underpowered. So we report:
   - The border design (Dube et al.) and the pre-trend test (Karan et al.) both
     point to a causal effect, and the trend-adjusted state estimate (+52.3)
     matches the border estimate (+52.8).
+  - NFHS-6 shows the advantage was largely about **timing**. Under PM-JAY the
+    neighbours rose from 31% to 64% by 2023–24, and the gap fell to about 15 pp.
+    A state scheme can deliver coverage years before the national scheme
+    reaches the same households, and that early coverage is what BSBY bought.
 - **Financial protection.**
   - Our null result on delivery OOP agrees with Karan et al.'s null for RSBY.
   - It doesn't contradict Sood et al.'s large tertiary-care effects. We measure a
@@ -589,16 +611,19 @@ only welfare outcome (OOP) is null and underpowered. So we report:
 
 ## 13. Conclusions
 
-1. **BSBY worked as a coverage policy.** Coverage rose about 53 percentage points
-   more in Rajasthan's border districts than in the districts across the border,
-   robust to every specification, sample and influence check. The gain persisted
-   to 2023–24.
+1. **BSBY worked as a coverage policy, and above all it worked early.** By
+   2019–21 coverage had risen about 53 percentage points more in Rajasthan's
+   border districts than across the border, robust to every check. By 2023–24
+   the neighbours had caught up to within about 15 points under PM-JAY. BSBY
+   brought near-universal coverage to Rajasthan several years ahead of its
+   neighbours, rather than creating a permanent gap.
 2. **Financial protection is unproven, not disproven.** There's no detectable
    change in OOP per delivery, but the design is too imprecise for this outcome,
    and deliveries are the wrong margin for a hospitalisation scheme. That matches
    the national evidence on RSBY.
 3. **The coverage gains cost at least about ₹377 per additionally insured
-   household per year.** Whether that's worth it depends on benefits this data
+   household per year** (measured against the 2019–21 gap; the cost per unit of
+   advantage over the national scheme rises as the neighbours catch up). Whether that's worth it depends on benefits this data
    can't measure. The break-even is at least ₹377 per household per year.
 4. **Policy implication.** State schemes like BSBY can rapidly achieve
    near-universal coverage. Evaluations should measure hospitalisation-level
@@ -619,14 +644,15 @@ only welfare outcome (OOP) is null and underpowered. So we report:
 6. **Pre-trends:** only one pre-period point, at state level.
 7. **Cost:** a floor from claims, not the actual premium. Benefits aren't
    monetised.
-8. **NFHS-6:** provisional and Rajasthan-only.
+8. **NFHS-6:** provisional; neighbours' values come from an independent compilation
+   (validated against the official Rajasthan PDF); Gujarat insurance revised in the compendium.
 
 **Future work**
 1. **Better spending data:** NSS health rounds (71st vs 75th) for OOP per
    hospitalisation.
 2. **A true spatial RD:** NFHS GPS cluster data, following Dell (2010) and Sood
    et al. (2014).
-3. **A longer border panel:** the neighbouring states' NFHS-6 data.
+3. **What drove the catch-up:** link the neighbours' NFHS-6 gains to PM-JAY rollout timing.
 4. **The actual premium:** from the Rajasthan budget or RSHAA reports, then
    MVPF / risk-protection valuation (Finkelstein & McKnight; Hendren &
    Sprung-Keyser).
