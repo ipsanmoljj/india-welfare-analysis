@@ -1,0 +1,2 @@
+parameter,value,unit,price_year,source,location,status
+p_rsby,560.0,INR per family per year (premium),uncertain (table cites MoLE 2008b; paper uses 2011-12 data),"Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92","Table 1, p.85: 'Average premium for participating districts is around INR 560'",sourced

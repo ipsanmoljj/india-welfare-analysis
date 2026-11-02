@@ -111,3 +111,12 @@ NFHS marks estimates from 25-49 unweighted cases with ( ) and suppresses <25 wit
 | electricity    |       5 | 274 |             1 |              0 |
 | women_school10 |       4 | 240 |             1 |              0 |
 | women_school10 |       5 | 274 |             1 |              0 |
+
+## Cost-effectiveness inputs (status: INCOMPLETE)
+
+Separate from the main audit; only `code/08_cost_effectiveness.py` depends on it.
+
+| Result | Parameter | Value | Source | Status |
+|---|---|---|---|---|
+| PASS | p_rsby | 560.0 INR per family per year (premium) | Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92 | sourced |
+| MISSING | p_bsby |  INR per family per year (premium) |  | missing - needs Rajasthan budget / RSHAA / Dupas & Jain (2021) |

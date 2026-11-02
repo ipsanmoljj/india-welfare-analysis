@@ -1,0 +1,15 @@
+Inputs: c_Raj = 0.875 (NFHS-5, 40 pairs), p_RSBY = 560 (Karan et al. 2017, Table 1), p_BSBY = not sourced
+
+Cost per additionally insured household per year as a function of the BSBY premium:
+  beta main (+52.8 pp)                  p_RSBY = 560              : CER = 1.66 x p_BSBY - 367
+  beta main (+52.8 pp)                  p_RSBY = 0 (upper bound)  : CER = 1.66 x p_BSBY - 0
+  beta 95% CI low                       p_RSBY = 560              : CER = 2.04 x p_BSBY - 585
+  beta 95% CI low                       p_RSBY = 0 (upper bound)  : CER = 2.04 x p_BSBY - 0
+  beta 95% CI high                      p_RSBY = 560              : CER = 1.39 x p_BSBY - 219
+  beta 95% CI high                      p_RSBY = 0 (upper bound)  : CER = 1.39 x p_BSBY - 0
+  beta MP border only (conservative)    p_RSBY = 560              : CER = 1.93 x p_BSBY - 518
+  beta MP border only (conservative)    p_RSBY = 0 (upper bound)  : CER = 1.93 x p_BSBY - 0
+  Reading: each Rs 1 of BSBY premium per family costs about Rs 1.66 per additionally insured household.
+
+CBA inputs status: INCOMPLETE. No single cost figure is reported until a sourced
+BSBY premium is added to data/raw/cba_inputs.csv and passes code/00_clean_and_checks.py.

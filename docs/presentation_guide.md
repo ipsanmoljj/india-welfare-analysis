@@ -338,8 +338,8 @@ All p < 0.001. No other outcome is significant in any sample.
    not border villages.
 5. **OOP covers deliveries only,** and the design is underpowered for it.
 6. **One pre-period point, at state level.**
-7. **Welfare cost side not built:** the premium per insured family (Rajasthan
-   budget) hasn't been sourced, so there's no cost-benefit ratio.
+7. **Cost side incomplete:** the cost-effectiveness formula is built (section 12b), but the BSBY
+   premium isn't sourced, so it is reported only as a function of the premium.
 8. **NFHS-6 is provisional** and Rajasthan-only.
 
 **Future work:** NSS 71st vs 75th rounds for OOP per hospitalisation; NFHS
@@ -415,6 +415,71 @@ by state and border segment, but 6 states / 5 segments are too few clusters.
 A: (1) NSS health rounds for OOP per hospitalisation. (2) NFHS GPS clusters for a
 spatial RDD. (3) The premium cost for a full cost-benefit analysis.
 (4) Neighbours' NFHS-6.
+
+---
+
+## 12b. Cost-effectiveness and break-even (`code/08_cost_effectiveness.py`)
+
+**Status:** the formula and every input except one are sourced and cleaned. **The BSBY
+premium is not yet sourced**, so no single rupee figure is reported. The result
+is shown as a function of the premium (`output/cba/fig_cost_effectiveness.png`).
+
+### Why not a full cost-benefit analysis
+A CBA needs a rupee value for benefits. Our only welfare outcome (OOP) is null
+and underpowered, so any benefit figure would be borrowed from other studies.
+We report what the coverage cost (tier 1), and how large a benefit would be
+needed to justify it (tier 2).
+
+### Method source
+The **incremental cost-effectiveness ratio** = incremental cost ÷ incremental effect
+(Drummond et al., *Methods for the Economic Evaluation of Health Care Programmes*;
+Boardman et al., *Cost-Benefit Analysis: Concepts and Practice*). It is applied to
+an evaluation's causal effect as in J-PAL's **Dhaliwal, Duflo, Glennerster &
+Tulloch (2013)**, "Comparative Cost-Effectiveness Analysis to Inform Policy in
+Developing Countries".
+
+### Formula
+
+  **Cost per additionally insured household per year = (p_BSBY · c_Raj − p_RSBY · c_cf) / β**
+
+| Symbol | Value | Source |
+|---|---|---|
+| β | 0.528 (CI 0.428–0.628; MP-only 0.454) | Our cleaned border-pair DiD |
+| c_Raj | 0.875 | NFHS-5 coverage in Rajasthan border districts, weighted as in β |
+| c_cf = c_Raj − β | 0.347 | Coverage the districts would have had without BSBY |
+| p_RSBY | ₹560 per family per year | Karan, Yip & Mahal (2017), Table 1, p. 85 |
+| p_BSBY | **not sourced** | Needs Rajasthan budget / RSHAA / Dupas & Jain (2021) |
+
+**Why households cancel:** spending = premium × covered families, and covered
+families = coverage rate × households. So the ratio needs no population counts.
+
+### Why each choice (for questions)
+| Choice | Reason |
+|---|---|
+| Divide by β, not by all enrolees | Coverage would have risen anyway (neighbours +18 pp); only households insured *because of* BSBY count as the effect |
+| Count spending on already-insured families | Paying for them is part of the cost of reaching new ones (crowd-out logic) |
+| Subtract RSBY counterfactual spending | Cost and effect share the same counterfactual: Rajasthan's scheme vs the national scheme |
+| p_RSBY = 0 as a sensitivity | Rajasthan was early in RSBY rollout in 2016 (Karan et al.), so the counterfactual spending may be near zero; this gives an upper bound |
+| CI and MP-only β | Effect uncertainty carries through; the smallest β gives the most conservative (highest) cost |
+| NFHS coverage ≈ enrolment | NFHS counts any insurance, so c_Raj slightly overstates BSBY enrolment → the ratio is an upper bound |
+
+### Result as a function of the premium
+With the main β and p_RSBY = ₹560: **cost = 1.66 × p_BSBY − 367** per additionally
+insured household per year. Each ₹1 of premium per family costs about ₹1.66 per
+household actually brought into insurance. All lines cross at p_BSBY = ₹560: if BSBY
+cost the same as RSBY per family, the cost per additionally insured household is
+₹560, whatever β is.
+
+### Tier 2: break-even
+The annual benefit an additionally insured household must receive for the scheme
+to pay for itself equals the ratio above. Plausibility, as scenarios rather than
+estimates: Karan et al. (2017) find ~₹0 OOP savings under RSBY; Sood et al. (2014)
+find 64% lower OOP for covered tertiary care. Our OOP CI per delivery (−₹2,003 to
++₹1,291) cannot confirm or rule out the break-even.
+
+### Tier 3 (future work)
+Value of risk protection (Finkelstein & McKnight 2008) and MVPF (Hendren &
+Sprung-Keyser 2020) need household-level spending data (NSS health rounds).
 
 ---
 

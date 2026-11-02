@@ -91,6 +91,15 @@ boundaries changed between rounds).
 
 ![Coefficients](output/insurance/fig_coefficients.png)
 
+## Cost-effectiveness (`code/08_cost_effectiveness.py`)
+
+Cost per additionally insured household per year = (p_BSBY · c_Raj − p_RSBY · c_cf) / β,
+the incremental cost-effectiveness ratio applied to a causal estimate as in Dhaliwal
+et al. (2013). With β = 0.528, c_Raj = 0.875 and p_RSBY = ₹560 (Karan et al. 2017):
+**cost = 1.66 × p_BSBY − 367**. The BSBY premium is not yet sourced, so no single
+figure is reported. Add it to `data/raw/cba_inputs.csv` with its source and re-run
+`./run_all.sh`. Details: [`docs/presentation_guide.md`](docs/presentation_guide.md#12b-cost-effectiveness-and-break-even-code08_cost_effectivenesspy).
+
 ## NFHS-6 (2023-24, provisional): Rajasthan only (`code/07_nfhs6_rajasthan.py`)
 
 The uploaded compendium covers Rajasthan's 33 pre-2023 districts, so they line up
