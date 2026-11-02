@@ -287,9 +287,9 @@ All p < 0.001. No other outcome is significant in any sample.
   13.0 → 31.0 → **64.1%**.
 - **How to say it:** "Rajasthan's coverage held, but the neighbours caught up
   under PM-JAY. BSBY's effect is mostly about getting there years earlier."
-- **Data:** an independent compilation of the IIPS NFHS-6 fact sheets (Patra
-  2026), validated against our extraction of the official Rajasthan PDF (33/33
-  exact). The compendium revises NFHS-5 insurance for 3 Gujarat districts by about
+- **Data:** extracted from the official IIPS NFHS-6 compendiums for all six
+  states; identical (220/220) to an independent compilation (Patra 2026). The
+  official Gujarat compendium revises NFHS-5 insurance for 3 districts by about
   +5 pp (documented exception).
 - **Placebos:** flat from 5 to 6. The long-difference women's-schooling placebo is
   significant (+3.6, p = 0.04; p = 0.11 without Gujarat). Report it.
@@ -352,8 +352,8 @@ All p < 0.001. No other outcome is significant in any sample.
 7. **Cost is a floor:** the BSBY premium isn't public, so cost uses official claims paid per
    family (section 12b): ₹377 per additionally insured household is a lower bound. Benefits are not monetised (OOP null), so this is cost-effectiveness plus
    break-even, not a full CBA.
-8. **NFHS-6 is provisional;** the neighbours' values come from an independent
-   compilation (validated against the official Rajasthan PDF).
+8. **NFHS-6 is provisional** (official IIPS compendiums); Gujarat's NFHS-5
+   insurance is revised in its NFHS-6 compendium.
 
 **Future work:** NSS 71st vs 75th rounds for OOP per hospitalisation; NFHS
 GPS-cluster data for a spatial RDD (Dell 2010; Sood et al. 2014); linking the

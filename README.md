@@ -114,15 +114,17 @@ premium. **Break-even:** each additionally insured household must gain at least 
 
 ## NFHS-6 (2023-24, provisional): the neighbours caught up
 
-NFHS-6 district data for **all** border districts comes from Patra (2026), an
-independent CSV compilation of the IIPS fact sheets. It passes the cleaning checks:
-- **Rajasthan:** equal to our own extraction of the official Rajasthan compendium
-  (33/33 districts).
-- **All 44 border districts:** matched, with no small-sample or boundary flags.
-- **NFHS-5 values:** the compendium's NFHS-5 column equals our cleaned NFHS-5,
-  except Gujarat insurance in 3 districts, which the compendium revises up about
-  5 pp. This is a documented exception: those districts are excluded from 4→6
-  insurance changes.
+NFHS-6 district values are extracted from the **official IIPS compendiums** for
+Rajasthan, Gujarat, Haryana, Madhya Pradesh, Punjab and Uttar Pradesh
+(`data/raw/NFHS-6_StateFact_*.pdf`, `code/07_nfhs6_rajasthan.py`). They pass the
+cleaning checks:
+- **All 44 border districts:** found, with no small-sample or suppressed values.
+- **Cross-check:** identical (220/220 values) to an independent CSV compilation of
+  the same fact sheets (Patra 2026).
+- **NFHS-5 values:** each compendium's NFHS-5 column equals our cleaned NFHS-5,
+  except Gujarat insurance in 3 districts. The official Gujarat compendium revises
+  these up about 5 pp. This is a documented exception: those districts are
+  excluded from 4→6 insurance changes.
 
 | Change in the Rajasthan − neighbour gap | β (SE) | p | Pairs |
 |---|---|---|---|

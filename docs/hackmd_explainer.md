@@ -313,7 +313,7 @@ From the official SIHFW Rajasthan presentation (`data/raw/BSBY_SIHFW_presentatio
 | NFHS-4 (2015–16) and NFHS-5 (2019–21) district factsheets (IIPS) | One value per district per indicator, 641 districts | Main analysis |
 | A second copy of the same factsheets (phase-1 states) | Same values, plus small-sample flags | Cross-checking |
 | NFHS-3/4/5 state factsheets | State values back to 2005–06 | Pre-trend event study |
-| NFHS-6 (2023–24) Rajasthan compendium (official PDF) and all-state compilation (Patra 2026), provisional | NFHS-6 next to NFHS-5, all border districts | Third round; cross-checks |
+| NFHS-6 (2023–24) official IIPS compendiums for Rajasthan and the 5 neighbouring states, provisional | NFHS-6 next to NFHS-5, all border districts | Third round; cross-checks |
 | Census 2011 district map | District boundaries | Finding border pairs |
 | SIHFW BSBY presentation | Claims, eligibility, coverage share | Cost |
 
@@ -493,11 +493,11 @@ in any sample.
 - **Rajasthan's level held, but its lead shrank** as PM-JAY expanded coverage
   across the border. BSBY's effect is best read as **getting Rajasthan to
   near-universal coverage years earlier**, not a permanent gap.
-- **Data:** NFHS-6 for all border districts comes from an independent compilation
-  of the IIPS fact sheets (Patra 2026). It matches our extraction of the official
-  Rajasthan compendium exactly. The compendium revises NFHS-5 insurance for 3
-  Gujarat districts by about +5 pp (documented; those districts are excluded from
-  the 4→6 insurance change).
+- **Data:** NFHS-6 values are extracted from the official IIPS compendiums of all
+  six states and are identical (220/220) to an independent compilation (Patra
+  2026). The official Gujarat compendium revises NFHS-5 insurance for 3 districts
+  by about +5 pp (documented; those districts are excluded from the 4→6 insurance
+  change).
 - **Placebos:** flat from NFHS-5 to NFHS-6. The long-difference women's-schooling
   placebo is significant (+3.6 pp, p = 0.04; p = 0.11 without Gujarat), a mild
   warning about faster general development in Rajasthan.
@@ -644,8 +644,8 @@ only welfare outcome (OOP) is null and underpowered. So we report:
 6. **Pre-trends:** only one pre-period point, at state level.
 7. **Cost:** a floor from claims, not the actual premium. Benefits aren't
    monetised.
-8. **NFHS-6:** provisional; neighbours' values come from an independent compilation
-   (validated against the official Rajasthan PDF); Gujarat insurance revised in the compendium.
+8. **NFHS-6:** provisional (official compendiums); Gujarat's NFHS-5 insurance is
+   revised in its NFHS-6 compendium.
 
 **Future work**
 1. **Better spending data:** NSS health rounds (71st vs 75th) for OOP per
@@ -730,7 +730,8 @@ z-scores; why two-way clustering; next steps.
 - Dupas, P., & Jain, R. (2021, revised 2023). Women left behind: Gender disparities in utilization of government health insurance in India. NBER Working Paper 28972.
 - Finkelstein, A., & McKnight, R. (2008). What did Medicare do? The initial impact of Medicare on mortality and out of pocket medical spending. *Journal of Public Economics*, 92(7), 1644–1668.
 - Hendren, N., & Sprung-Keyser, B. (2020). A unified welfare analysis of government policies. *Quarterly Journal of Economics*, 135(3), 1209–1318.
-- International Institute for Population Sciences (IIPS). National Family Health Survey (NFHS-3, 4, 5) state and district fact sheets; NFHS-6 (2023–24) Rajasthan compendium (provisional, August 2026).
+- International Institute for Population Sciences (IIPS). National Family Health Survey (NFHS-3, 4, 5) state and district fact sheets; NFHS-6 (2023–24) compendiums of state and district fact sheets for Rajasthan, Gujarat, Haryana, Madhya Pradesh, Punjab and Uttar Pradesh (provisional, 2026).
+- Patra, N. K. (2026). *NFHS-6 provisional district-level data (India): independent compilation.* GitHub (used as a cross-check).
 - Karan, A., Yip, W., & Mahal, A. (2017). Extending health insurance to the poor in India: An impact evaluation of Rashtriya Swasthya Bima Yojana on out of pocket spending for healthcare. *Social Science & Medicine*, 181, 83–92.
 - Kling, J. R., Liebman, J. B., & Katz, L. F. (2007). Experimental analysis of neighborhood effects. *Econometrica*, 75(1), 83–119.
 - SIHFW Rajasthan. *Bhamashah Swasthya Bima Yojana* (presentation). State Institute of Health and Family Welfare, Jaipur.

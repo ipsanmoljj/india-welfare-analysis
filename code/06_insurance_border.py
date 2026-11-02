@@ -275,7 +275,7 @@ ax.set_ylim(0, 100)
 ax.set_ylabel("Households with any member insured (%)")
 ax.set_title("Coverage in border districts over three rounds")
 ax.legend(frameon=False, fontsize=8, loc="center left")
-fig.text(0.01, 0.01, "NFHS-6 is provisional (IIPS fact sheets via Patra 2026 compilation). For 3 Gujarat districts the "
+fig.text(0.01, 0.01, "NFHS-6 is provisional (official IIPS state compendiums). For 3 Gujarat districts the "
          "NFHS-6 compendium revises NFHS-5 insurance up ~5 pp.", fontsize=5.5, color="#555")
 fig.tight_layout(rect=(0, 0.03, 1, 1))
 fig.savefig(OUT / "fig_coverage_three_rounds.png", dpi=200)
