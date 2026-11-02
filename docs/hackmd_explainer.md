@@ -661,27 +661,36 @@ only welfare outcome (OOP) is null and underpowered. So we report:
 
 ## 15. Suggested slide structure
 
-| # | Slide | Content | Visual |
-|---|---|---|---|
-| 1 | Title | Title, name, date | — |
-| 2 | Motivation | OOP burden in India; government insurance; mixed evidence | — |
-| 3 | Literature: method | Dube et al. (2010): objective, design, results | Their contiguous-county map, described in words |
-| 4 | Literature: India insurance | Karan et al. (2017) and Sood et al. (2014): objective, method, results | Comparison table |
-| 5 | Literature: other and gap | Card & Krueger, Abadie et al., Dupas & Jain; the gap this project fills | Table from 3.4 |
-| 6 | Policy | BSBY features and timeline | Timeline (section 5) |
-| 7 | Question and hypotheses | H1–H3 and placebos | — |
-| 8 | Data and cleaning | Sources; cleaning protocol; audit passes | Cleaning table |
-| 9 | Border sample | 23 × 26 districts, 40 pairs | **Figure 1** (map) |
-| 10 | Method | Equation, pair fixed effects, clustering | Equation |
-| 11 | Pre-trends | φ2, φ3, permutation | **Figure 2** (event study) |
-| 12 | Main result | +52.8 pp, raw DiD by eye | **Figure 3** (three rounds) |
-| 13 | Robustness and other outcomes | Samples, baseline control, leave-one-out, placebos | **Figure 4** (coefficients) |
-| 14 | OOP: why no detectable effect | CI, MDE, mean reversion, JSSK | — |
-| 15 | Cost-effectiveness | ₹377 lower bound; break-even | **Figure 5** (cost) |
-| 16 | Discussion | Results against the literature | — |
-| 17 | Conclusions | Four conclusions | — |
-| 18 | Limitations and future work | Lists from section 14 | — |
-| 19 | References | Section 17 | — |
+The Beamer deck (`presentation/main.tex`, IIT Roorkee template, 26 slides) follows this order:
+
+| # | Slide | Visual |
+|---|---|---|
+| 1 | Title | — |
+| 2 | Table of Contents | — |
+| 3 | Motivation | — |
+| 4 | Literature (1): Dube, Lester & Reich (2010) | — |
+| 5 | Literature (2): Karan, Yip & Mahal (2017) | — |
+| 6 | Literature (3): Sood et al. (2014) | — |
+| 7 | Literature (4): other studies | — |
+| 8 | The policy: BSBY | — |
+| 9 | Research question and hypotheses | — |
+| 10 | Data | — |
+| 11 | Variables and sample | — |
+| 12 | Data cleaning (all checks pass) | — |
+| 13 | Border sample | **Figure 1** (map) |
+| 14 | Empirical strategy | — |
+| 15 | Pre-trends: state event study | **Figure 2** (event study) |
+| 16 | Main result: coverage | **Figure 3** (three rounds) |
+| 17 | Did the lead last? NFHS-6 (2023–24) | — |
+| 18 | All outcomes | — |
+| 19 | Robustness at a glance | **Figure 4** (coefficients) |
+| 20 | Why no effect on OOP? | — |
+| 21 | Cost-effectiveness | **Figure 5** (cost) |
+| 22 | Discussion | — |
+| 23 | Conclusions | — |
+| 24 | Limitations and future work | — |
+| 25 | References | — |
+| 26 | Thank you | — |
 
 **Likely questions** (answers in `docs/presentation_guide.md`, section 12): why
 not an RDD; the baseline after launch; parallel trends; whether the comparison

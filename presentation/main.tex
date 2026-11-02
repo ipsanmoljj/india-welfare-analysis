@@ -17,6 +17,7 @@
 \usepackage{amssymb}
 \usepackage{tikz, graphicx}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{url}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{headline}{}
@@ -206,7 +207,46 @@ SIHFW BSBY presentation & Claims, eligibility (cost) \\
 \end{tabular}
 \vspace{6pt}
 
-\textbf{Outcomes:} insurance coverage (\% households); OOP per delivery in a public facility (real 2019--21 Rs, and log); institutional and public-facility births (\%); \emph{placebos}: electricity, women with 10+ years of schooling.
+\textbf{Unit of observation:} district (Census 2011 boundaries), one value per indicator per survey round. Variables and sample: next slide.
+\end{frame}
+
+\begin{frame}[t]{Variables and sample}
+\tiny
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{1.8cm}@{}}
+\toprule
+\textbf{NFHS indicator (exact wording)} & \textbf{Unit / treatment} & \textbf{Role} & \textbf{Rounds} \\
+\midrule
+Households with any usual member covered under a health insurance/financing scheme & \% of households & \textbf{Main outcome (H1)} & NFHS-3$^{*}$, 4, 5, 6 \\
+Average out-of-pocket expenditure per delivery in a public health facility & Rs, real 2019--21 (CPI-C); capped at $Q_3{+}1.5$IQR; also in logs & Welfare outcome (H2) & NFHS-4, 5 (dropped in NFHS-6) \\
+Institutional births & \% of births in last 5 years & Use of care (H3) & NFHS-4, 5, 6 \\
+Institutional births in public facility & \% of births in last 5 years & Use of care (H3) & NFHS-4, 5, 6 \\
+Population living in households with electricity & \% of population & Placebo & NFHS-4, 5, 6 \\
+Women with 10 or more years of schooling & \% of women 15--49 & Placebo & NFHS-4, 5, 6 \\
+\bottomrule
+\end{tabular}
+\\[1pt]{\tiny $^{*}$ state level only (pre-trend test).}
+
+\vspace{4pt}
+\scriptsize
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\textbf{Treatment and time}
+\begin{itemize}
+\item $D_i = 1$ if the district is in Rajasthan, 0 if a neighbour
+\item Pre = NFHS-4 (2015--16); Post = NFHS-5 (2019--21)
+\item Outcome in the regression: $\Delta Y = Y^{\text{NFHS-5}} - Y^{\text{NFHS-4}}$
+\end{itemize}
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Sample}
+\begin{itemize}
+\item 23 Rajasthan + 26 neighbour border districts; 51 pairs
+\item 5 neighbours split after NFHS-4 dropped
+\item \textbf{40 pairs}: 19 Rajasthan + 21 neighbour districts
+\end{itemize}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[t]{Data cleaning (all checks pass)}
