@@ -1,3 +1,6 @@
 parameter,value,unit,price_year,source,location,status
 p_rsby,560,INR per family per year (premium),uncertain (table cites MoLE 2008b; paper uses 2011-12 data),"Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92","Table 1, p.85: 'Average premium for participating districts is around INR 560'",sourced
-p_bsby,,INR per family per year (premium),,,,missing - needs Rajasthan budget / RSHAA / Dupas & Jain (2021)
+bsby_eligible_families,10000000,families,,"SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf)","p.2: 'Launched on 13th December, 2015 for around 1 crore eligible families'",sourced
+bsby_claims_start,20151213,date (YYYYMMDD),,"SIHFW Rajasthan, BSBY presentation","p.2 (launch date); p.19 'Cumulative since launch'",sourced
+bsby_claims_end,20170210,date (YYYYMMDD),,"SIHFW Rajasthan, BSBY presentation","p.19: 'Data As on 10-02-2017'",sourced
+p_bsby,,INR per family per year (premium),,,,missing - premium not stated in SIHFW deck; claims-based floor used instead

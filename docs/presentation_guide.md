@@ -338,8 +338,9 @@ All p < 0.001. No other outcome is significant in any sample.
    not border villages.
 5. **OOP covers deliveries only,** and the design is underpowered for it.
 6. **One pre-period point, at state level.**
-7. **Cost side incomplete:** the cost-effectiveness formula is built (section 12b), but the BSBY
-   premium isn't sourced, so it is reported only as a function of the premium.
+7. **Cost is a floor:** the BSBY premium isn't public, so cost uses official claims paid
+   (section 12b). Benefits are not monetised (OOP null), so this is cost-effectiveness plus
+   break-even, not a full CBA.
 8. **NFHS-6 is provisional** and Rajasthan-only.
 
 **Future work:** NSS 71st vs 75th rounds for OOP per hospitalisation; NFHS
@@ -420,9 +421,13 @@ spatial RDD. (3) The premium cost for a full cost-benefit analysis.
 
 ## 12b. Cost-effectiveness and break-even (`code/08_cost_effectiveness.py`)
 
-**Status:** the formula and every input except one are sourced and cleaned. **The BSBY
-premium is not yet sourced**, so no single rupee figure is reported. The result
-is shown as a function of the premium (`output/cba/fig_cost_effectiveness.png`).
+**Status:** complete with sourced inputs. All inputs pass the cleaning checks
+(`output/checks/data_audit.md`, cost-effectiveness section).
+
+**Headline:** BSBY cost about **₹492 per additionally insured household per year**
+(2019-21 ₹), with a range of ₹414–608 over the 95% CI of β and ₹572 with the
+conservative MP-only β. About **40%** of spending goes to households that would
+have had some insurance anyway.
 
 ### Why not a full cost-benefit analysis
 A CBA needs a rupee value for benefits. Our only welfare outcome (OOP) is null
@@ -447,8 +452,8 @@ Developing Countries".
 | β | 0.528 (CI 0.428–0.628; MP-only 0.454) | Our cleaned border-pair DiD |
 | c_Raj | 0.875 | NFHS-5 coverage in Rajasthan border districts, weighted as in β |
 | c_cf = c_Raj − β | 0.347 | Coverage the districts would have had without BSBY |
-| p_RSBY | ₹560 per family per year | Karan, Yip & Mahal (2017), Table 1, p. 85 |
-| p_BSBY | **not sourced** | Needs Rajasthan budget / RSHAA / Dupas & Jain (2021) |
+| p_BSBY (cost) | **₹297 per family per year** (floor, 2019-21 ₹) | SIHFW BSBY presentation: claims paid ₹295.63 cr, 13 Dec 2015 – 10 Feb 2017 (p. 19), ~1 crore eligible families (p. 2) |
+| p_RSBY (counterfactual) | **0 in the main spec**; ₹560 as a sensitivity | Rajasthan "still in the early stages of rolling-out RSBY as of September 2016" (Karan et al. 2017, p. 84); ₹560 from their Table 1, p. 85 |
 
 **Why households cancel:** spending = premium × covered families, and covered
 families = coverage rate × households. So the ratio needs no population counts.
@@ -463,16 +468,39 @@ families = coverage rate × households. So the ratio needs no population counts.
 | CI and MP-only β | Effect uncertainty carries through; the smallest β gives the most conservative (highest) cost |
 | NFHS coverage ≈ enrolment | NFHS counts any insurance, so c_Raj slightly overstates BSBY enrolment → the ratio is an upper bound |
 
-### Result as a function of the premium
-With the main β and p_RSBY = ₹560: **cost = 1.66 × p_BSBY − 367** per additionally
-insured household per year. Each ₹1 of premium per family costs about ₹1.66 per
-household actually brought into insurance. All lines cross at p_BSBY = ₹560: if BSBY
-cost the same as RSBY per family, the cost per additionally insured household is
-₹560, whatever β is.
+### Where the cost figure comes from
+The premium itself is not public in citable form. The official SIHFW deck reports
+**claims paid**: ₹295.63 crore over 1.16 years for about 1 crore families. That is
+₹254 per family per year in nominal terms, or **₹297 in 2019-21 rupees** (CPI-C,
+time-weighted over the claims window). The state paid the insurer *at least*
+this much, and the deck's profit-refund clause (p. 18) pushes the premium toward
+claims. So it is a floor on cost.
+
+Cleaning checks on the transcribed claims table: Pvt + Govt = Total for every row;
+the funnel is monotone (enlisted ₹414.67 cr ≥ submitted ≥ approved ≥ paid ₹295.63 cr);
+the average paid claim (₹4,927) is plausible.
+
+### Results (`output/cba/cost_effectiveness.csv`)
+| β case | Cost per additionally insured household per year (2019-21 ₹) |
+|---|---|
+| Main (0.528) | **₹492** |
+| 95% CI of β | ₹414 – ₹608 |
+| MP border only (0.454, conservative) | ₹572 |
+| Sensitivity: offset by full RSBY premium ₹560 | ₹125 (mixes a claims floor with a premium, so not the main estimate) |
+
+General form: cost = 1.66 × (BSBY cost per family) with the main β.
+
+**Bias directions (say these):**
+- *Understated:* claims are below the premium (insurer margin), and the window
+  includes the early ramp-up months.
+- *Overstated:* NFHS coverage counts any insurance, so c_Raj overstates BSBY
+  enrolment, and some RSBY spending would have happened without BSBY.
 
 ### Tier 2: break-even
 The annual benefit an additionally insured household must receive for the scheme
-to pay for itself equals the ratio above. Plausibility, as scenarios rather than
+to pay for itself equals the ratio above: **about ₹492 a year**. For scale, BSBY
+paid an average of ₹4,927 per claim, and about 5% of eligible families had a
+paid claim per year (6,00,033 claims over 1.16 years among ~1 crore families). Plausibility, as scenarios rather than
 estimates: Karan et al. (2017) find ~₹0 OOP savings under RSBY; Sood et al. (2014)
 find 64% lower OOP for covered tertiary care. Our OOP CI per delivery (−₹2,003 to
 +₹1,291) cannot confirm or rule out the break-even.

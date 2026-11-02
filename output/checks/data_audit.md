@@ -112,11 +112,19 @@ NFHS marks estimates from 25-49 unweighted cases with ( ) and suppresses <25 wit
 | women_school10 |       4 | 240 |             1 |              0 |
 | women_school10 |       5 | 274 |             1 |              0 |
 
-## Cost-effectiveness inputs (status: INCOMPLETE)
+## Cost-effectiveness inputs (status: PASS)
 
 Separate from the main audit; only `code/08_cost_effectiveness.py` depends on it.
 
-| Result | Parameter | Value | Source | Status |
-|---|---|---|---|---|
-| PASS | p_rsby | 560.0 INR per family per year (premium) | Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92 | sourced |
-| MISSING | p_bsby |  INR per family per year (premium) |  | missing - needs Rajasthan budget / RSHAA / Dupas & Jain (2021) |
+| Result | Check | Detail |
+|---|---|---|
+| PASS | input p_rsby | 560 INR per family per year (premium); Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92, Table 1, p.85: 'Average premium for participating districts is around INR 560' |
+| PASS | input bsby_eligible_families | 10,000,000 families; SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf), p.2: 'Launched on 13th December, 2015 for around 1 crore eligible families' |
+| PASS | input bsby_claims_start | 20,151,213 date (YYYYMMDD); SIHFW Rajasthan, BSBY presentation, p.2 (launch date); p.19 'Cumulative since launch' |
+| PASS | input bsby_claims_end | 20,170,210 date (YYYYMMDD); SIHFW Rajasthan, BSBY presentation, p.19: 'Data As on 10-02-2017' |
+| OPTIONAL-MISSING | p_bsby | missing - premium not stated in SIHFW deck; claims-based floor used instead |
+| PASS | all required inputs sourced | missing: [] |
+| PASS | claims: Pvt + Govt = Total (cases exact, amounts within Rs 0.02 cr) |  |
+| PASS | claims funnel monotone (enlisted >= submitted >= approved >= paid) |  |
+| PASS | average paid claim plausible (Rs 500 - 50,000) | Rs 4,927 |
+| PASS | derived BSBY cost floor (claims paid per eligible family per year) | Rs 295.63 cr over 1.16 yrs / 10,000,000 families x CPI 1.170 = Rs 297 (2019-21 Rs) |

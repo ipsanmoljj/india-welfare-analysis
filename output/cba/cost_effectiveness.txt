@@ -1,4 +1,4 @@
-Inputs: c_Raj = 0.875 (NFHS-5, 40 pairs), p_RSBY = 560 (Karan et al. 2017, Table 1), p_BSBY = not sourced
+Inputs: c_Raj = 0.875 (NFHS-5, 40 pairs), p_RSBY = 560 (Karan et al. 2017, Table 1), p_BSBY = not sourced, claims-paid floor = 297 per family per year (2019-21 Rs)
 
 Cost per additionally insured household per year as a function of the BSBY premium:
   beta main (+52.8 pp)                  p_RSBY = 560              : CER = 1.66 x p_BSBY - 367
@@ -11,5 +11,15 @@ Cost per additionally insured household per year as a function of the BSBY premi
   beta MP border only (conservative)    p_RSBY = 0 (upper bound)  : CER = 1.93 x p_BSBY - 0
   Reading: each Rs 1 of BSBY premium per family costs about Rs 1.66 per additionally insured household.
 
-CBA inputs status: INCOMPLETE. No single cost figure is reported until a sourced
-BSBY premium is added to data/raw/cba_inputs.csv and passes code/00_clean_and_checks.py.
+COST-EFFECTIVENESS using the BSBY claims-paid floor (Rs 297/family/yr):
+                    beta_case  beta  p_rsby_offset  cost_per_add_household                                                                    spec
+              main (+52.8 pp)   0.5            0.0                   492.5                                  main (Rajasthan RSBY in early rollout)
+                   95% CI low   0.4            0.0                   608.0                                  main (Rajasthan RSBY in early rollout)
+                  95% CI high   0.6            0.0                   413.8                                  main (Rajasthan RSBY in early rollout)
+MP border only (conservative)   0.5            0.0                   572.5                                  main (Rajasthan RSBY in early rollout)
+              main (+52.8 pp)   0.5          560.0                   125.0 sensitivity: full RSBY premium offset (mixes claims floor with premium)
+
+MAIN: about Rs 492 per additionally insured household per year (2019-21 Rs), range Rs 414-608 over the 95% CI of beta; Rs 572 with MP-only beta.
+Share of spending on households who would have been insured anyway: c_cf / c_Raj = 40%.
+BREAK-EVEN (tier 2): an additionally insured household must gain about Rs 492 a year.
+Bias directions: claims < premium and early ramp-up -> understated; NFHS coverage counts any insurance and some RSBY spending would have occurred -> overstated.

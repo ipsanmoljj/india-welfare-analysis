@@ -257,19 +257,60 @@ w.drop(columns=["key"]).to_csv(CLEAN / "insurance_district_clean.csv", index=Fal
 # ---------------------------------------------------------------- 5. cost-effectiveness inputs
 # Kept separate from the main audit: missing CBA inputs block only the CBA,
 # never the main analysis. Every value needs a source and location to be used.
+REQUIRED = ["p_rsby", "bsby_eligible_families", "bsby_claims_start", "bsby_claims_end"]
+OPTIONAL = ["p_bsby"]  # premium; not in the SIHFW deck, so a claims-based floor is used
 ci = pd.read_csv(RAW / "cba_inputs.csv", dtype={"value": float})
 cba_log = []
+
+
+def cba_check(name, ok, detail=""):
+    cba_log.append(f"| {'PASS' if ok else 'FLAG'} | {name} | {detail} |")
+
+
 for r in ci.itertuples():
-    ok = (pd.notna(r.value) and r.value > 0 and r.status == "sourced"
-          and isinstance(r.source, str) and isinstance(r.location, str))
-    cba_log.append(f"| {'PASS' if ok else 'MISSING'} | {r.parameter} | {r.value if pd.notna(r.value) else ''} "
-                   f"{r.unit} | {r.source if isinstance(r.source, str) else ''} | {r.status} |")
-    if ok and "per family per year" in r.unit:
-        # premiums for subsidised health insurance in India: plausibility bounds
-        if not 100 <= r.value <= 5000:
-            cba_log[-1] = cba_log[-1].replace("| PASS |", "| FLAG |", 1)
-ci.loc[ci.status == "sourced"].to_csv(CLEAN / "cba_inputs_clean.csv", index=False)
-cba_status = "PASS" if all(l.startswith("| PASS") for l in cba_log) else "INCOMPLETE"
+    sourced = (pd.notna(r.value) and r.value > 0 and r.status == "sourced"
+               and isinstance(r.source, str) and isinstance(r.location, str))
+    if r.parameter in OPTIONAL and not sourced:
+        cba_log.append(f"| OPTIONAL-MISSING | {r.parameter} | {r.status} |")
+        continue
+    ok = sourced and (not r.unit.startswith("INR per family per year") or 100 <= r.value <= 5000)
+    cba_check(f"input {r.parameter}", ok, f"{r.value:,.0f} {r.unit}; {r.source}, {r.location}")
+missing_req = [q for q in REQUIRED if q not in set(ci.loc[ci.status == "sourced", "parameter"])]
+cba_check("all required inputs sourced", not missing_req, f"missing: {missing_req}")
+
+# BSBY claims table (SIHFW deck p.19), transcribed: internal consistency checks
+cl = pd.read_csv(RAW / "bsby_claims_sihfw.csv").set_index("stage")
+cba_check("claims: Pvt + Govt = Total (cases exact, amounts within Rs 0.02 cr)",
+          (cl.cases_pvt + cl.cases_govt == cl.cases_total).all()
+          and ((cl.amount_cr_pvt + cl.amount_cr_govt - cl.amount_cr_total).abs() <= 0.02).all())
+funnel = ["enlisted", "submitted", "approved", "paid"]
+cba_check("claims funnel monotone (enlisted >= submitted >= approved >= paid)",
+          cl.loc[funnel, "cases_total"].is_monotonic_decreasing
+          and cl.loc[funnel, "amount_cr_total"].is_monotonic_decreasing)
+avg_claim = cl.loc["paid", "amount_cr_total"] * 1e7 / cl.loc["paid", "cases_total"]
+cba_check("average paid claim plausible (Rs 500 - 50,000)", 500 <= avg_claim <= 50000, f"Rs {avg_claim:,.0f}")
+
+# Derived: claims paid per eligible family per year, real 2019-21 rupees (a floor on premium cost)
+v = ci.set_index("parameter")["value"]
+t0 = pd.Timestamp(str(int(v["bsby_claims_start"])))
+t1 = pd.Timestamp(str(int(v["bsby_claims_end"])))
+years = (t1 - t0).days / 365.25
+# CPI-C: FY2015-16 = 124.7, FY2016-17 = 130.3 (same chain as above); time-weighted over the claims window
+fy_split = pd.Timestamp("2016-04-01")
+cpi_window = (124.7 * (fy_split - t0).days + 130.3 * (t1 - fy_split).days) / (t1 - t0).days
+real = CPI_BASE / cpi_window
+claims_paid_yr = cl.loc["paid", "amount_cr_total"] * 1e7 / years
+floor = claims_paid_yr / v["bsby_eligible_families"] * real
+cba_check("derived BSBY cost floor (claims paid per eligible family per year)", 100 <= floor <= 5000,
+          f"Rs {cl.loc['paid', 'amount_cr_total']} cr over {years:.2f} yrs / {v['bsby_eligible_families']:,.0f} "
+          f"families x CPI {real:.3f} = Rs {floor:,.0f} (2019-21 Rs)")
+derived = pd.DataFrame([dict(parameter="p_bsby_claims_floor", value=floor,
+                             unit="INR per family per year, real 2019-21",
+                             source="derived from SIHFW BSBY deck p.2 and p.19",
+                             location=f"claims paid Rs 295.63 cr, {t0.date()} to {t1.date()}", status="sourced")])
+out_ci = pd.concat([ci.loc[ci.status == "sourced"], derived], ignore_index=True)
+out_ci.to_csv(CLEAN / "cba_inputs_clean.csv", index=False)
+cba_status = "PASS" if all(l.startswith(("| PASS", "| OPTIONAL")) for l in cba_log) else "INCOMPLETE"
 (CHK / "cba_inputs_status.txt").write_text(cba_status + "\n")
 
 # ---------------------------------------------------------------- audit report
@@ -290,7 +331,7 @@ md = ["# Data audit: BSBY border analysis", "",
       "## Cross-source agreement detail", "", cmp.round(3).to_markdown(index=False), "",
       f"## Cost-effectiveness inputs (status: {cba_status})", "",
       "Separate from the main audit; only `code/08_cost_effectiveness.py` depends on it.", "",
-      "| Result | Parameter | Value | Source | Status |", "|---|---|---|---|---|", *cba_log]
+      "| Result | Check | Detail |", "|---|---|---|", *cba_log]
 (CHK / "data_audit.md").write_text("\n".join(md) + "\n")
 status = "PASS" if all(line.startswith("| PASS") for line in log) else "FAIL"
 (CHK / "audit_status.txt").write_text(status + "\n")
