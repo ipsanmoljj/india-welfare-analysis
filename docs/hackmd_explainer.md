@@ -684,7 +684,7 @@ The Beamer deck (`presentation/main.tex`, IIT Roorkee template, 26 slides) follo
 | 17 | Did Rajasthan's lead last? | — |
 | 18 | All outcomes | — |
 | 19 | Robustness at a glance | **Figure 4** (coefficients) |
-| 20 | Why no effect on OOP? | — |
+| 20 | Out-of-pocket spending | — |
 | 21 | Cost-effectiveness | **Figure 5** (cost) |
 | 22 | Discussion | — |
 | 23 | Conclusions | — |
