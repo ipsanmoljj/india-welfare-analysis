@@ -2,3 +2,9 @@ __pycache__/
 .ipynb_checkpoints/
 data/raw/map/
 data/interim/
+presentation/*.aux
+presentation/*.log
+presentation/*.nav
+presentation/*.out
+presentation/*.snm
+presentation/*.toc
