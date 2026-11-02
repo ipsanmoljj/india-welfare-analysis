@@ -497,7 +497,7 @@ For H households in the border districts:
 | **s_BSBY** | **0.67** | SIHFW deck p. 17: "NFSA and RSBY (Covering 67% of Population)" |
 | c_Raj | 0.875 (sensitivity only) | NFHS-5 any-insurance coverage, Rajasthan border districts |
 | c_cf = c_Raj − β | 0.347 | Coverage without BSBY |
-| p_RSBY | **0 in the main spec**; ₹560 as a sensitivity | Rajasthan "still in the early stages of rolling-out RSBY as of September 2016" (Karan et al. 2017, p. 84); ₹560 from their Table 1, p. 85 |
+| p_RSBY | **0 in the main spec**; ₹560 as a sensitivity | RSBY launched nationally in 2008; Rajasthan joined, later discontinued it (Rajya Sabha answer, 2011), and was "still in the early stages of rolling-out RSBY as of September 2016" (Karan et al. 2017, p. 84); ₹560 from their Table 1, p. 85 |
 
 **Important wording:** the ₹297 is **not the BSBY premium**. The premium isn't public
 in citable form. ₹297 is **official claims paid per eligible family per year**. The

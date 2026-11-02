@@ -104,7 +104,8 @@ cost per additionally insured household = (cost per family × s_BSBY − p_RSBY 
   Dec 2015 – Feb 2017; p. 2: ~1 crore families). This is a floor on cost, not the
   premium, which isn't public.
 - **Covered share:** s_BSBY = 0.67 ("covering 67% of population", deck p. 17).
-- **Counterfactual RSBY spending:** 0 (Rajasthan in early RSBY rollout; Karan et al. 2017, p. 84).
+- **Counterfactual RSBY spending:** 0. RSBY was launched nationally in 2008, but Rajasthan joined and later
+  discontinued it (Rajya Sabha answer, 2011) and was only re-starting it in 2016 (Karan et al. 2017, p. 84).
 
 **Result: at least about ₹377 per additionally insured household per year** (₹317–466 over
 the 95% CI of β; ₹439 with the MP-only β). It is a lower bound because claims are below the

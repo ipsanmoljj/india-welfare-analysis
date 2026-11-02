@@ -549,7 +549,7 @@ only welfare outcome (OOP) is null and underpowered. So we report:
 | β | 0.528 (95% CI 0.428–0.628; MP-only 0.454) | Our regression |
 | Cost per family | ₹297 per year (2019–21 ₹): **claims paid**, a floor on the premium | SIHFW deck: ₹295.63 cr over 1.16 years (p. 19) ÷ ~1 crore families (p. 2) |
 | s_BSBY | 0.67 | SIHFW deck p. 17: "Covering 67% of Population" |
-| p_RSBY | 0 (main); ₹560 as a sensitivity | Karan et al. (2017): Rajasthan in early RSBY rollout (p. 84); Table 1 (p. 85) |
+| p_RSBY | 0 (main); ₹560 as a sensitivity | RSBY launched nationally in 2008; Rajasthan joined, later discontinued it (Rajya Sabha answer, 2011), and was re-starting it in 2016 (Karan et al. 2017, p. 84); ₹560 from Table 1 (p. 85) |
 
 **Why each choice:**
 - **Divide by β, not by all enrolees:** coverage would have risen anyway

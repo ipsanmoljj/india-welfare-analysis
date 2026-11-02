@@ -23,7 +23,8 @@ Main specification:
   - s_BSBY = 0.67, not c_Raj = 0.875: c_Raj counts any insurance (employee
     schemes, private), but only BSBY families cost BSBY money. c_Raj is kept as a
     sensitivity (it overstates spending).
-  - p_RSBY = 0: Rajasthan "was still in the early stages of rolling-out RSBY as
+  - p_RSBY = 0: RSBY was launched nationally in 2008; Rajasthan joined, later discontinued
+    it (Rajya Sabha answer, 2011), and "was still in the early stages of rolling-out RSBY as
     of September 2016" (Karan et al. 2017, p.84); offsetting a claims floor with
     a full premium would also mix concepts.
 Remaining biases mostly push the true cost ABOVE the main estimate (claims < premium,
