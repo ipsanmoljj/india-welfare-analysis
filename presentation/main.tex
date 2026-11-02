@@ -432,25 +432,26 @@ These findings are consistent with Karan, Yip \& Mahal (2017), who report no red
 \section{Cost-effectiveness}
 
 \begin{frame}[t]{Cost-effectiveness: approach}
-\small
-The benefits of BSBY cannot be valued in rupees, as the effect on out-of-pocket spending is inconclusive. We therefore report an incremental cost-effectiveness ratio (Dhaliwal et al.\ 2013): the annual public cost per household that became insured because of BSBY.
+\footnotesize
+As the effect on out-of-pocket spending is inconclusive, benefits cannot be valued in rupees. We instead estimate the annual public cost per household insured because of BSBY (Dhaliwal et al.\ 2013):
 \[
-\text{Cost per additionally insured household} \;=\; \frac{c \cdot s \;-\; p_{RSBY} \cdot c_{cf}}{\beta}
+\text{Cost} = \frac{c \cdot s - p_{RSBY} \cdot c_{cf}}{\beta}
 \]
-\scriptsize
-\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{5.2cm}r>{\raggedright\arraybackslash}p{2.6cm}@{}}
+\begin{tabular}{@{}llrl@{}}
 \toprule
 & \textbf{Definition} & \textbf{Value} & \textbf{Source} \\
 \midrule
 $c$ & Annual cost per covered family (claims paid) & \Rs 297 & SIHFW, pp.\ 2, 19 \\
 $s$ & Share of households covered by BSBY & 0.67 & SIHFW, p.\ 17 \\
 $\beta$ & Increase in coverage caused by BSBY & 0.528 & Border-pair DiD \\
-$p_{RSBY}$ & Counterfactual cost per family under RSBY & 0 & Karan et al., p.\ 84 \\
+$p_{RSBY}$ & Cost per family under RSBY (counterfactual) & 0 & Karan et al., p.\ 84 \\
 \bottomrule
 \end{tabular}
 
-\vspace{5pt}
-$c$: \Rs 295.63 crore of claims over 1.16 years for about 1 crore families, i.e.\ \Rs 254 per family per year (\Rs 297 in 2019--21 prices). Claims understate the premium, so $c$ is a lower bound. $p_{RSBY} = 0$ because RSBY was still being rolled out in Rajasthan in 2016, so the term $p_{RSBY} \cdot c_{cf}$ (with $c_{cf}$ the coverage that would have existed without BSBY) drops out.
+\vspace{6pt}
+\scriptsize
+$c$ = \Rs 295.63 crore of claims $\div$ 1.16 years $\div$ 1 crore families = \Rs 254 (\Rs 297 in 2019--21 prices); a lower bound on the premium.\\
+$p_{RSBY} = 0$ as RSBY was barely rolled out in Rajasthan by 2016, so the $c_{cf}$ term drops out.
 \end{frame}
 
 \begin{frame}[t]{Cost-effectiveness: results}
@@ -475,8 +476,8 @@ MP border only (0.45) & 439 \\
 \end{columns}
 
 \vspace{6pt}
-\small
-BSBY cost at least \Rs 377 a year for each household that became insured because of the scheme. About 21\% of spending went to households that would have been insured anyway. For the scheme to break even, each additionally insured household must gain at least \Rs 377 a year.
+\footnotesize
+BSBY cost at least \Rs 377 a year per additionally insured household; about 21\% of spending reached households that would have been insured anyway. To break even, each such household must gain at least \Rs 377 a year.
 
 \vspace{3pt}
 \scriptsize The estimate refers to the 2019--21 coverage gap; as neighbouring districts caught up, the cost per unit of lasting advantage rises.
