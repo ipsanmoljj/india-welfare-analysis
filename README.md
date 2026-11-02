@@ -8,6 +8,8 @@ following Dube, Lester & Reich (2010).
 
 ![Border sample](output/insurance/fig_border_map.png)
 
+**New to the project?** Read [`docs/explainer.md`](docs/explainer.md): background, literature (intro, objective, methods, results), data, methods, results, conclusions and a slide outline. HackMD-ready copy: `docs/hackmd_explainer.md`.
+
 **Presenting?** Start with [`docs/presentation_guide.md`](docs/presentation_guide.md): methods, results, every figure, limitations and likely questions.
 
 Full walkthrough (data, sample construction, why districts look partial on the
