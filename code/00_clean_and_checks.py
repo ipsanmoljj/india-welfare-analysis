@@ -257,7 +257,7 @@ w.drop(columns=["key"]).to_csv(CLEAN / "insurance_district_clean.csv", index=Fal
 # ---------------------------------------------------------------- 5. cost-effectiveness inputs
 # Kept separate from the main audit: missing CBA inputs block only the CBA,
 # never the main analysis. Every value needs a source and location to be used.
-REQUIRED = ["p_rsby", "bsby_eligible_families", "bsby_claims_start", "bsby_claims_end"]
+REQUIRED = ["p_rsby", "bsby_eligible_families", "bsby_claims_start", "bsby_claims_end", "bsby_coverage_share"]
 OPTIONAL = ["p_bsby"]  # premium; not in the SIHFW deck, so a claims-based floor is used
 ci = pd.read_csv(RAW / "cba_inputs.csv", dtype={"value": float})
 cba_log = []
@@ -273,8 +273,9 @@ for r in ci.itertuples():
     if r.parameter in OPTIONAL and not sourced:
         cba_log.append(f"| OPTIONAL-MISSING | {r.parameter} | {r.status} |")
         continue
-    ok = sourced and (not r.unit.startswith("INR per family per year") or 100 <= r.value <= 5000)
-    cba_check(f"input {r.parameter}", ok, f"{r.value:,.0f} {r.unit}; {r.source}, {r.location}")
+    ok = sourced and (not r.unit.startswith("INR per family per year") or 100 <= r.value <= 5000) \
+        and (not r.unit.startswith("share") or 0 < r.value <= 1)
+    cba_check(f"input {r.parameter}", ok, f"{r.value:,.2f} {r.unit}; {r.source}, {r.location}")
 missing_req = [q for q in REQUIRED if q not in set(ci.loc[ci.status == "sourced", "parameter"])]
 cba_check("all required inputs sourced", not missing_req, f"missing: {missing_req}")
 
@@ -301,7 +302,7 @@ cpi_window = (124.7 * (fy_split - t0).days + 130.3 * (t1 - fy_split).days) / (t1
 real = CPI_BASE / cpi_window
 claims_paid_yr = cl.loc["paid", "amount_cr_total"] * 1e7 / years
 floor = claims_paid_yr / v["bsby_eligible_families"] * real
-cba_check("derived BSBY cost floor (claims paid per eligible family per year)", 100 <= floor <= 5000,
+cba_check("derived BSBY cost per family, claims-paid floor (not the premium)", 100 <= floor <= 5000,
           f"Rs {cl.loc['paid', 'amount_cr_total']} cr over {years:.2f} yrs / {v['bsby_eligible_families']:,.0f} "
           f"families x CPI {real:.3f} = Rs {floor:,.0f} (2019-21 Rs)")
 derived = pd.DataFrame([dict(parameter="p_bsby_claims_floor", value=floor,

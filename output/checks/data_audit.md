@@ -118,13 +118,14 @@ Separate from the main audit; only `code/08_cost_effectiveness.py` depends on it
 
 | Result | Check | Detail |
 |---|---|---|
-| PASS | input p_rsby | 560 INR per family per year (premium); Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92, Table 1, p.85: 'Average premium for participating districts is around INR 560' |
-| PASS | input bsby_eligible_families | 10,000,000 families; SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf), p.2: 'Launched on 13th December, 2015 for around 1 crore eligible families' |
-| PASS | input bsby_claims_start | 20,151,213 date (YYYYMMDD); SIHFW Rajasthan, BSBY presentation, p.2 (launch date); p.19 'Cumulative since launch' |
-| PASS | input bsby_claims_end | 20,170,210 date (YYYYMMDD); SIHFW Rajasthan, BSBY presentation, p.19: 'Data As on 10-02-2017' |
+| PASS | input p_rsby | 560.00 INR per family per year (premium); Karan, Yip & Mahal (2017), Social Science & Medicine 181:83-92, Table 1, p.85: 'Average premium for participating districts is around INR 560' |
+| PASS | input bsby_eligible_families | 10,000,000.00 families; SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf), p.2: 'Launched on 13th December, 2015 for around 1 crore eligible families' |
+| PASS | input bsby_claims_start | 20,151,213.00 date (YYYYMMDD); SIHFW Rajasthan, BSBY presentation, p.2 (launch date); p.19 'Cumulative since launch' |
+| PASS | input bsby_claims_end | 20,170,210.00 date (YYYYMMDD); SIHFW Rajasthan, BSBY presentation, p.19: 'Data As on 10-02-2017' |
+| PASS | input bsby_coverage_share | 0.67 share of population covered by BSBY; SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf), p.17: 'NFSA and RSBY (Covering 67% of Population)' |
 | OPTIONAL-MISSING | p_bsby | missing - premium not stated in SIHFW deck; claims-based floor used instead |
 | PASS | all required inputs sourced | missing: [] |
 | PASS | claims: Pvt + Govt = Total (cases exact, amounts within Rs 0.02 cr) |  |
 | PASS | claims funnel monotone (enlisted >= submitted >= approved >= paid) |  |
 | PASS | average paid claim plausible (Rs 500 - 50,000) | Rs 4,927 |
-| PASS | derived BSBY cost floor (claims paid per eligible family per year) | Rs 295.63 cr over 1.16 yrs / 10,000,000 families x CPI 1.170 = Rs 297 (2019-21 Rs) |
+| PASS | derived BSBY cost per family, claims-paid floor (not the premium) | Rs 295.63 cr over 1.16 yrs / 10,000,000 families x CPI 1.170 = Rs 297 (2019-21 Rs) |

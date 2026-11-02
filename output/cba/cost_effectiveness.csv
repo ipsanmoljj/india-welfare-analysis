@@ -1,6 +1,7 @@
-beta_case,beta,p_rsby_offset,cost_per_add_household,spec
-main (+52.8 pp),0.528,0.0,492.4638217327665,main (Rajasthan RSBY in early rollout)
-95% CI low,0.428,0.0,608.0394485776984,main (Rajasthan RSBY in early rollout)
-95% CI high,0.628,0.0,413.80761786364064,main (Rajasthan RSBY in early rollout)
-MP border only (conservative),0.454,0.0,572.4872567759437,main (Rajasthan RSBY in early rollout)
-main (+52.8 pp),0.528,560.0,124.99861957387914,sensitivity: full RSBY premium offset (mixes claims floor with premium)
+spec,beta_case,beta,covered_share,p_rsby_offset,cost_per_add_household
+main,main (+52.8 pp),0.528,0.67,0.0,377.2806135280472
+main,95% CI low,0.428,0.67,0.0,465.82405871254707
+main,95% CI high,0.628,0.67,0.0,317.02144413542885
+main,MP border only (conservative),0.454,0.67,0.0,438.5872300496054
+sensitivity: any-insurance share c_Raj (overstates spending),main (+52.8 pp),0.528,0.875,0.0,492.4638217327665
+sensitivity: full RSBY premium offset (mixes claims floor with premium),main (+52.8 pp),0.528,0.67,560.0,9.815411369159799

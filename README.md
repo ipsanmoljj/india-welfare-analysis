@@ -94,18 +94,19 @@ boundaries changed between rounds).
 ## Cost-effectiveness (`code/08_cost_effectiveness.py`)
 
 The incremental cost-effectiveness ratio, applied to a causal estimate as in Dhaliwal et al. (2013):
-cost per additionally insured household = (p_BSBY · c_Raj − p_RSBY · c_cf) / β.
 
-- **BSBY cost:** official claims paid (SIHFW deck, `data/raw/BSBY_SIHFW_presentation.pdf`,
-  p. 19: ₹295.63 cr, Dec 2015 – Feb 2017, ~1 crore families) = **₹297 per family per year**
-  in 2019-21 rupees. This is a floor on cost.
-- **Counterfactual RSBY spending:** 0 in the main specification, because Rajasthan was in
-  early RSBY rollout (Karan et al. 2017, p. 84).
+cost per additionally insured household = (cost per family × s_BSBY − p_RSBY × c_cf) / β
 
-**Result: about ₹492 per additionally insured household per year** (₹414–608 over the
-95% CI of β; ₹572 with the MP-only β). About 40% of spending goes to households that
-would have been insured anyway. **Break-even:** each additionally insured household
-must gain about ₹492 a year.
+- **Cost per family:** ₹297 per covered family per year (2019-21 ₹), from **official
+  claims paid** (SIHFW deck, `data/raw/BSBY_SIHFW_presentation.pdf`, p. 19: ₹295.63 cr,
+  Dec 2015 – Feb 2017; p. 2: ~1 crore families). This is a floor on cost, not the
+  premium, which isn't public.
+- **Covered share:** s_BSBY = 0.67 ("covering 67% of population", deck p. 17).
+- **Counterfactual RSBY spending:** 0 (Rajasthan in early RSBY rollout; Karan et al. 2017, p. 84).
+
+**Result: at least about ₹377 per additionally insured household per year** (₹317–466 over
+the 95% CI of β; ₹439 with the MP-only β). It is a lower bound because claims are below the
+premium. **Break-even:** each additionally insured household must gain at least about ₹377 a year.
 
 ![Cost-effectiveness](output/cba/fig_cost_effectiveness.png)
 

@@ -1,10 +1,9 @@
 # Methodology: from start to end
 
-**Open gap:** this is not yet a complete *welfare* analysis. It shows that the
-scheme expanded coverage massively, and that out-of-pocket (OOP) spending on
-deliveries did not measurably fall. A cost side needs the premium Rajasthan paid
-per insured family (Rajasthan budget, Medical & Health demand for grants). That
-figure has not been sourced yet.
+**Cost side:** benefits can't be monetised (the OOP result is null), so the welfare
+section is cost-effectiveness plus break-even, not a full CBA. Cost uses official
+BSBY claims paid as a floor (the premium isn't public): at least about ₹377 per
+additionally insured household per year. See `docs/presentation_guide.md`, section 12b.
 
 ---
 

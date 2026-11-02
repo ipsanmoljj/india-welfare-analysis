@@ -3,4 +3,5 @@ p_rsby,560.0,INR per family per year (premium),uncertain (table cites MoLE 2008b
 bsby_eligible_families,10000000.0,families,,"SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf)","p.2: 'Launched on 13th December, 2015 for around 1 crore eligible families'",sourced
 bsby_claims_start,20151213.0,date (YYYYMMDD),,"SIHFW Rajasthan, BSBY presentation",p.2 (launch date); p.19 'Cumulative since launch',sourced
 bsby_claims_end,20170210.0,date (YYYYMMDD),,"SIHFW Rajasthan, BSBY presentation",p.19: 'Data As on 10-02-2017',sourced
+bsby_coverage_share,0.67,share of population covered by BSBY,,"SIHFW Rajasthan, BSBY presentation (data/raw/BSBY_SIHFW_presentation.pdf)",p.17: 'NFSA and RSBY (Covering 67% of Population)',sourced
 p_bsby_claims_floor,297.3478029455001,"INR per family per year, real 2019-21",,derived from SIHFW BSBY deck p.2 and p.19,"claims paid Rs 295.63 cr, 2015-12-13 to 2017-02-10",sourced
